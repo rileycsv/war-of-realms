@@ -12,6 +12,10 @@ public class GameManager {
 	    return activePlayer;
 	}
 	
+	public static void startGame() {
+		
+	}
+	
 	public static void setActivePlayer(int id) {
 	    // Now you can add safety checks!
 	    if (id >= 0 && id < players.length) {

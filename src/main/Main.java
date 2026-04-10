@@ -2,10 +2,16 @@ package main;
 
 import utils.Debug;
 import environment.Board;
+
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 public class Main extends Application {
 	
@@ -41,12 +47,38 @@ public class Main extends Application {
      */
 	public void setScreen(int id) {
 		Debug.log("'setScreen': setting screen " + id);
+		String fileName = "";
 		switch (id) {
 			case 0:
+			    fileName = "/scenes/startGame.fxml";  // ← add leading /
+			    break;
+			case 1:
+			    fileName = "/scenes/playerOneEmpire.fxml";
+			    break;
+			case 2:
+			    fileName = "/scenes/playerTwoEmpire.fxml";
+			    break;
+			case 3:
+				// Set the scene to the game board
 				primaryStage.setScene(board.getScene());
-				break;
+				// Exit the function early since no FXML file needs to be loaded
+				return;
+			case 4:
+			    fileName = "/scenes/chooseBattlefield.fxml";
+			    break;
 		}
 		
+		// Load the FXML file from fileName and set it to the primary stage
+		try {
+		    var resource = getClass().getResource(fileName);
+		    if (resource == null) {
+		        Debug.error("FXML resource not found: " + fileName);
+		        return;
+		    }
+		    primaryStage.setScene(new Scene(FXMLLoader.load(resource)));
+		} catch (IOException e) {
+		    Debug.error(e);
+		}
 	}
 
 	public static void main(String[] args) { launch(args); }
