@@ -2,3 +2,7 @@
 /bin/
 .project
 .classpath
+
+# Compiled output and macOS junk
+*.class
+.DS_Store
