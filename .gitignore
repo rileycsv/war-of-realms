@@ -1,4 +1,3 @@
 # Ignore the bin directory and Eclipse project files
 /bin/
 .project
-.classpath
