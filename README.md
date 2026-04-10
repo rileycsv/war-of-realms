@@ -23,33 +23,49 @@ War of Realms is a tactical strategy game where players control units on a dynam
 ## Project Structure
 
 ```
-src/
-├── core/                    # Game logic and state management
-│   ├── GameManager.java     # Global game state, active player tracking
-│   └── Player.java          # Player definition and kingdom management
-├── entities/
-│   └── Unit.java            # Controllable game units with stats
-├── environment/             # Board and rendering
-│   ├── Board.java           # Isometric grid rendering and camera management
-│   └── tile/                # Tile type definitions
-│       ├── Tile.java        # Base tile class with sprite management
-│       ├── GrassTile.java
-│       ├── MountainTile.java
-│       ├── RiverTile.java
-│       └── VoidTile.java
-├── main/
-│   └── Main.java            # JavaFX application entry point
-└── utils/
-    └── Debug.java           # Debug logging utilities
-
-assets/
-└── tiles/                   # Tile sprite assets
-    ├── grass/
-    ├── mountain/
-    ├── river/
-    └── void/
-
-docs/                        # JavaDoc documentation
+war-of-realms/
+├── src/                         # Source code
+│   ├── core/                    # Game logic and state management
+│   │   ├── GameManager.java     # Global game state, active player tracking
+│   │   └── Player.java          # Player definition and kingdom management
+│   ├── entities/                # Game entities
+│   │   └── Unit.java            # Controllable game units with stats
+│   ├── environment/             # Board and rendering
+│   │   ├── Board.java           # Isometric grid rendering and camera management
+│   │   └── tile/                # Tile type definitions
+│   │       ├── Tile.java        # Base tile class with sprite management
+│   │       ├── GrassTile.java   # Grass terrain
+│   │       ├── MountainTile.java # Mountain terrain (higher movement cost)
+│   │       ├── RiverTile.java   # River terrain
+│   │       └── VoidTile.java    # Empty/void terrain
+│   ├── main/
+│   │   └── Main.java            # JavaFX application entry point
+│   └── utils/
+│       └── Debug.java           # Debug logging utilities
+│
+├── assets/                      # Game assets
+│   ├── kingdoms/                # Kingdom-related assets
+│   ├── tiles/                   # Tile sprite sheets
+│   │   ├── grass/
+│   │   ├── mountain/
+│   │   ├── river/
+│   │   └── void/
+│   └── scenes/                  # JavaFX FXML UI scenes
+│       ├── startGame.fxml
+│       ├── chooseBattlefield.fxml
+│       ├── playerOneEmpire.fxml
+│       ├── playerTwoEmpire.fxml
+│       └── Scene Images/
+│
+├── docs/                        # JavaDoc HTML documentation
+│   ├── core/
+│   ├── entities/
+│   ├── environment/
+│   ├── main/
+│   ├── utils/
+│   └── index.html              # Documentation entry point
+│
+└── README.md                    # This file
 ```
 
 ## Getting Started
