@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public class Main extends Application {
@@ -29,7 +28,7 @@ public class Main extends Application {
 		primaryStage.setTitle("War of Realms");
 		primaryStage.show();
 		
-		setScreen(0);
+		setScreen(3);
 		
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			// If debug is enabled and the Escape key is pressed, close the program

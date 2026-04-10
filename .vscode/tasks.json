@@ -4,14 +4,14 @@
     {
       "label": "Compile Java Files",
       "type": "shell",
-      "command": "javac",
+      "command": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\\bin\\javac.exe",
       "args": [
         "-d",
         "bin",
         "-cp",
-        "src;C:/javafx-sdk-25.0.2/lib/*",
+        "src;C:\\javafx-sdk-21.0.6\\lib\\*",
         "--module-path",
-        "C:/javafx-sdk-25.0.2/lib",
+        "C:\\javafx-sdk-21.0.6\\lib\\",
         "--add-modules",
         "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
         "-sourcepath",
@@ -43,10 +43,10 @@
     {
       "label": "Run War of Realms",
       "type": "shell",
-      "command": "java",
+      "command": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\\bin\\java.exe",
       "args": [
         "--module-path",
-        "C:/javafx-sdk-25.0.2/lib",
+        "C:\\javafx-sdk-21.0.6\\lib\\",
         "--add-modules",
         "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
         "-cp",
