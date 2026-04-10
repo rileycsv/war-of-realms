@@ -1,0 +1,70 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compile Java Files",
+      "type": "shell",
+      "command": "javac",
+      "args": [
+        "-d",
+        "bin",
+        "-cp",
+        "src;C:/javafx-sdk-25.0.2/lib/*",
+        "--module-path",
+        "C:/javafx-sdk-25.0.2/lib",
+        "--add-modules",
+        "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
+        "-sourcepath",
+        "src",
+        "src/main/Main.java",
+        "src/core/GameManager.java",
+        "src/core/Player.java",
+        "src/entities/Unit.java",
+        "src/environment/Board.java",
+        "src/environment/tile/Tile.java",
+        "src/environment/tile/GrassTile.java",
+        "src/environment/tile/MountainTile.java",
+        "src/environment/tile/RiverTile.java",
+        "src/environment/tile/VoidTile.java",
+        "src/utils/Debug.java"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$javac"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Run War of Realms",
+      "type": "shell",
+      "command": "java",
+      "args": [
+        "--module-path",
+        "C:/javafx-sdk-25.0.2/lib",
+        "--add-modules",
+        "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
+        "-cp",
+        "bin",
+        "main.Main"
+      ],
+      "dependsOn": ["Compile Java Files"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
