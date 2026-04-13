@@ -1,7 +1,8 @@
-# Ignore the bin directory and Eclipse project files
+# Ignore the bin directory and local project files
 /bin/
 .project
 .classpath
+/sources.txt
 
 # Compiled output and macOS junk
 *.class
