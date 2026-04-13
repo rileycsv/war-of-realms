@@ -1,6 +1,7 @@
 package entities;
 
 import core.GameManager;
+import environment.Board;
 import javafx.scene.image.Image;
 import utils.Debug;
 
@@ -13,44 +14,89 @@ import utils.Debug;
  */
 public abstract class Unit {
 	// The ID of the player that owns the unit
-	public int PLAYER_ID = -1;
+	public boolean PLAYER_ID = false; // false = player 1, true = player 2
 	public String UNIT_TYPE = "debug.png";
 	private Image sprite;
-	private String kingdom;
-	
-	// Unit base stats
-    private int maxMovement;
-	private int maxHealth;
-    private int attackDamage;
-    private int attackRange;
-    
-    // Game state stats (These fluctuate during gameplay)
-    private int currentHealth;
-	private int currentMovement;
-    
-    // The unit's current grid position
-    private int row = -1;
-    private int col = -1;
+	private String kingdom = "debug";
 
-	public Unit(int PID, String kingdom) {
+	// Unit base stats
+	private int maxMovement;
+	private int health;
+	private int attackDamage;
+	private int attackRange;
+
+	// Game state stats (These fluctuate during gameplay)
+	private int currentHealth;
+	private int currentMovement;
+
+	// The unit's current grid position
+	private int[] pos = {-1, -1}; // {row, col}
+
+	private int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
+
+	public Unit(boolean PID, String kingdom, int x, int y) {
 		this.PLAYER_ID = PID;
 		this.kingdom = kingdom;
+
+		// Set the unit's initial position on the grid
+		this.pos[0] = x;
+		this.pos[1] = y;
+
+		// Load the sprite image based on the unit type and kingdom
 		sprite = new Image(getSpritePath());
 	}
-	
+
+	public boolean getPlayerID() {
+		return this.PLAYER_ID;
+	}
+
+	public int getHealth() { return this.health; }
+	public int getX() { return this.pos[0]; }
+	public int getY() { return this.pos[1]; }
+
+	public int[] getPos() {
+		return this.pos;
+	}
+
+	private void moveTo(int row, int col) {
+		this.pos[0] = row;
+		this.pos[1] = col;
+	}
+
 	/**
-	 * Retrieves the dynamic path for this unit's sprite based on their owning player's kingdom.
-	 * IMPORTANT: This assumes a specific file structure: /assets/units/{kingdomName}/{UNIT_TYPE}
+	 * Determines if the unit can move to the specified grid position based on its
+	 * movement rules and the current game state.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
+	 */
+	public abstract boolean[] canMoveTo(int row, int col);
+	/**
+	 * Determines if the unit can attack a target at the specified grid position based on its attack rules and the current game state.
+	 * This typically checks if the target is within the unit's attack range and if there are any obstacles in the way.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
+	 */
+	public abstract boolean[] canAttack(int row, int col);
+
+	/**
+	 * Retrieves the dynamic path for this unit's sprite based on their owning
+	 * player's kingdom.
+	 * IMPORTANT: This assumes a specific file structure:
+	 * /assets/kingdoms/{kingdomName}/{UNIT_TYPE}
+	 * 
 	 * @return The file path string for the sprite image.
 	 */
 	public String getSpritePath() {
+
 		return String.format("/assets/units/%s/%s", kingdom, UNIT_TYPE);
 	}
-	
+
 	public Image getImage() {
-		return sprite;
+		return this.sprite;
 	}
-	
+
 	/**
 	 * Resets currentMovement to the maxMovement speed at the start of the turn.
 	 */
