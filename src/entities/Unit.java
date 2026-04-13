@@ -14,7 +14,7 @@ import utils.Debug;
  */
 public abstract class Unit {
 	// The ID of the player that owns the unit
-	public boolean PLAYER_ID = false; // false = player 1, true = player 2
+	public int PLAYER_ID = -1; 
 	public String UNIT_TYPE = "debug.png";
 	private Image sprite;
 	private String kingdom = "debug";
@@ -34,7 +34,7 @@ public abstract class Unit {
 
 	private int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
 
-	public Unit(boolean PID, String kingdom, int x, int y) {
+	public Unit(int PID, String kingdom, int x, int y) {
 		this.PLAYER_ID = PID;
 		this.kingdom = kingdom;
 
@@ -46,7 +46,7 @@ public abstract class Unit {
 		sprite = new Image(getSpritePath());
 	}
 
-	public boolean getPlayerID() {
+	public int getPlayerID() {
 		return this.PLAYER_ID;
 	}
 
@@ -100,7 +100,7 @@ public abstract class Unit {
 	/**
 	 * Resets currentMovement to the maxMovement speed at the start of the turn.
 	 */
-	public void turnStart() {
+	public void endTurn() {
 		this.currentMovement = this.maxMovement;
 	}
 }

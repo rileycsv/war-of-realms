@@ -29,6 +29,7 @@ public final class ScreenFlows {
 	}
 
 	private ScreenFlows() {
+		
 	}
 
 	public static void show(Stage stage, int id) {

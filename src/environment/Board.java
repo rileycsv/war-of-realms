@@ -3,6 +3,7 @@ package environment;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -15,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 
 import utils.Debug;
 import core.GameManager;
+import core.Player;
+import entities.Unit;
 import environment.tile.*;
 
 /**
@@ -194,6 +197,12 @@ public class Board {
 		// 3. Align the HUD to the top center and add some margin
 		StackPane.setAlignment(turnIndicatorBox, Pos.TOP_CENTER);
 		StackPane.setMargin(turnIndicatorBox, new Insets(15, 0, 0, 0));
+		
+		Button endTurnButton = new Button("End Turn");
+		endTurnButton.setOnAction(e -> {
+			GameManager.endTurn();
+			updateTurnIndicatorUI();
+		});
 
 		// Get cursor position when cursor moves
 		canvas.setOnMouseMoved(e -> {
@@ -211,13 +220,24 @@ public class Board {
 			render();
 		});
 
-		// When the canvas is clicked, log the board coordinate if debugging
 		canvas.setOnMouseClicked(e -> {
 			double[] world = screenToWorld(e.getX(), e.getY());
-			int[] t = canvasToTile(world[0], world[1]);
-			centerCameraOnTile(t[0], t[1]);
-			if (t[0] >= 0) {
-				Debug.printf("Clicked row=%d  col=%d%n", t[0], t[1]);
+			int[] tile = canvasToTile(world[0], world[1]);
+		
+			if (tile[0] == -1 || tile[1] == -1) {
+				// Clicked outside board
+				GameManager.clearSelection();
+				return;
+			}
+		
+			Unit unitAtTile = GameManager.getUnitAtTile(tile[0], tile[1]);
+		
+			if (unitAtTile != null && unitAtTile.getPlayerID() == (GameManager.getActivePlayer() == 1)) {
+				// Clicked on own unit - select it
+				GameManager.setSelectedUnit(unitAtTile);
+			} else {
+				// Clicked on enemy, empty space, or neutral - deselect
+				GameManager.clearSelection();
 			}
 		});
 
@@ -378,35 +398,31 @@ public class Board {
 	 */
 	private void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-
-		gc.setImageSmoothing(false);
-
-		gc.setTransform(1, 0, 0, 1, 0, 0);
-		gc.setFill(Color.rgb(180, 195, 170));
+		gc.setFill(Color.web("#111111"));
 		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
+		// Save graphics state
 		gc.save();
 
-		// Move the origin to the center of the viewport
-		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0);
-
-		// Apply the zoom scale
+		// Apply camera transform
+		gc.translate(cameraX, cameraY);
 		gc.scale(zoom, zoom);
 
-		// Translate the world so the camera targets the correct absolute coordinate
-		gc.translate(-cameraX, -cameraY);
-
-		int rows = getBoard().length;
-		int cols = getBoard()[0].length;
-
-		for (int diag = 0; diag < rows + cols - 1; diag++) {
-			int rMin = Math.max(0, diag - (cols - 1));
-			int rMax = Math.min(diag, rows - 1);
-			for (int r = rMin; r <= rMax; r++) {
-				drawTile(gc, r, diag - r);
+		// === RENDERING PIPELINE (PAINTER'S ALGORITHM) ===
+		char[][] board = getBoard();
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[0].length; col++) {
+				drawTile(gc, row, col);
 			}
 		}
 
+		// Render highlights for selected unit (if any)
+		drawUnitHighlights(gc);
+
+		// Render all units
+		drawUnits(gc);
+
+		// Restore graphics state
 		gc.restore();
 	}
 
@@ -439,7 +455,7 @@ public class Board {
 				// Block tiles have dirt. Align their bottom to the standard dirt baseline.
 				drawY = (top[1] + SPRITE_H) - imgH;
 			}
-
+			
 			// Tint sprite on hover
 			if (row == hoverRow && col == hoverCol) {
 				ColorAdjust highlight = new ColorAdjust();
@@ -632,5 +648,109 @@ public class Board {
 		int midCol = getBoard()[0].length / 2;
 
 		centerCameraOnTile(midRow, midCol);
+	}
+
+		/**
+	 * Renders movement/attack highlights for the selected unit.
+	 * Separate from tile rendering to avoid spaghetti logic.
+	 */
+	private void drawUnitHighlights(GraphicsContext gc) {
+		Unit selected = GameManager.getSelectedUnit();
+		if (selected == null) {
+			return;
+		}
+	
+		char[][] board = getBoard();
+	
+		// Get valid move and attack tiles
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[0].length; col++) {
+				// Skip the unit's own tile
+				if (row == selected.getX() && col == selected.getY()) {
+					continue;
+				}
+	
+				Color highlightColor = null;
+	
+				// Determine highlight color based on tile state
+				if (GameManager.isEnemyAtTile(row, col, selected)) {
+					// Red for enemy unit (attackable)
+					if (selected.canAttack(row, col)[0]) { // Simplified check; your canAttack may differ
+						highlightColor = Color.web("#FF3333");
+					}
+				} else if (GameManager.isAllyAtTile(row, col, selected)) {
+					// Allied unit blocks movement completely (no highlight)
+					continue;
+				} else {
+					// Empty tile - check if unit can move there
+					if (selected.canMoveTo(row, col)[0]) { // Simplified check
+						highlightColor = Color.web("#444444"); // Dark grey
+					}
+				}
+	
+				// Draw overlay if a highlight color was determined
+				if (highlightColor != null) {
+					drawTileHighlight(gc, row, col, highlightColor);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Draws a colored overlay on a tile (for movement/attack highlights).
+	 */
+	private void drawTileHighlight(GraphicsContext gc, int row, int col, Color color) {
+		double[] top = tileTopPoint(row, col);
+		if (top[0] < 0 || top[1] < 0) {
+			return;
+		}
+	
+		gc.setFill(color);
+		gc.setGlobalAlpha(0.5); // Semi-transparent
+	
+		// Draw filled diamond shape (same as tile footprint)
+		double x = top[0];
+		double y = top[1];
+		double[] xs = {x, x + TILE_W / 2, x, x - TILE_W / 2};
+		double[] ys = {y, y + FACE_H, y + 2 * FACE_H, y + FACE_H};
+		gc.fillPolygon(xs, ys, 4);
+	
+		gc.setGlobalAlpha(1.0);
+	}
+	
+	/**
+	 * Renders all units on the board at their tile positions.
+	 */
+	private void drawUnits(GraphicsContext gc) {
+		for (Player player : GameManager.players) {
+			for (Unit unit : player.getUnits()) {
+				if (unit != null) {
+					drawUnit(gc, unit);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Draws a single unit sprite and health bar.
+	 */
+	private void drawUnit(GraphicsContext gc, Unit unit) {
+		int row = unit.getX();
+		int col = unit.getY();
+		double[] top = tileTopPoint(row, col);
+	
+		if (top[0] < 0 || top[1] < 0) {
+			return;
+		}
+	
+		// Position sprite at top of tile
+		Image img = unit.getImage();
+		if (img != null) {
+			double spriteX = top[0] - img.getWidth() / 2;
+			double spriteY = top[1] - img.getHeight() + FACE_H;
+			gc.drawImage(img, spriteX, spriteY);
+		}
+	
+		// TODO: Draw health bar above/below sprite (implement as separate method)
 	}
 }
