@@ -28,7 +28,7 @@ public class Main extends Application {
 		primaryStage.setTitle("War of Realms");
 		primaryStage.show();
 		
-		setScreen(3);
+		setScreen(0);
 		
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			// If debug is enabled and the Escape key is pressed, close the program
