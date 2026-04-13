@@ -72,31 +72,49 @@ war-of-realms/
 
 ### Prerequisites
 
-- Java 11 or higher
-- JavaFX SDK (configuration may be required for your IDE)
+Before opening the project, make sure the following are installed and placed in the correct locations:
 
-### Building
+1. **JDK 25.0.2**
+   - Download from [https://jdk.java.net/25/](https://jdk.java.net/25/)
+   - Install to the default location: `C:\Program Files\Java\jdk-25.0.2\`
 
-Compile all Java files in the `src/` directory:
+2. **JavaFX SDK 25.0.2**
+   - Download from [https://gluonhq.com/products/javafx/](https://gluonhq.com/products/javafx/)
+   - Unzip directly to `C:\` so that the result is `C:\javafx-sdk-25.0.2\`
+   - ⚠️ The path must be exactly `C:\javafx-sdk-25.0.2\` — the build tasks depend on this location.
 
-```bash
-javac -d bin src/**/*.java
-```
+3. **Visual Studio Code**
+   - Download from [https://code.visualstudio.com/](https://code.visualstudio.com/)
 
-### Running
+4. **Extension Pack for Java** (VS Code extension)
+   - When you open the project in VS Code, you should see a popup:
+     > *"This workspace has extension recommendations. Would you like to install them?"*
+   - Click **Install** to install the Extension Pack for Java automatically.
+   - If you dismissed the popup, you can install it manually:
+     1. Open the Extensions sidebar (`Ctrl+Shift+X`)
+     2. Search for **Extension Pack for Java**
+     3. Click **Install** on the result by Microsoft
+   - ⚠️ This extension is required to run the project with `F5`.
 
-Execute the main application:
+### Running the Project
 
-```bash
-java -cp bin:lib/javafx-sdk/lib/* main.Main
-```
+1. Open the `war-of-realms` folder in VS Code (`File → Open Folder`)
+2. Install the recommended extensions when prompted (see above)
+3. Press **`F5`** to compile and launch the game
 
-*(Adjust the JavaFX library path based on your JavaFX SDK installation)*
+The build task will automatically:
+- Create the `bin/` output directory if it doesn't exist
+- Compile all Java source files
+- Launch the application with JavaFX
+
+Alternatively, you can run the build and run tasks separately:
+- **`Ctrl+Shift+B`** — Compile only
+- **`Ctrl+Shift+P` → "Tasks: Run Task" → "Run War of Realms"** — Compile and run
 
 ### Debug Mode
 
 - Press **ESC** to exit the game when debug mode is enabled
-- Debug output is logged to console during gameplay
+- Debug output is logged to the console during gameplay
 
 ## Game Architecture
 
@@ -143,4 +161,4 @@ When adding new features:
 
 ## Documentation
 
-Full JavaDoc HTML documentation is available in the docs directory. Open index.html in a browser to view the complete API reference.
+Full JavaDoc HTML documentation is available in the `docs/` directory. Open `index.html` in a browser to view the complete API reference.
