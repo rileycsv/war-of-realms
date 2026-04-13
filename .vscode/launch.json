@@ -7,8 +7,8 @@
       "request": "launch",
       "mainClass": "main.Main",
       "projectName": "war-of-realms",
-      "javaExec": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot\\bin\\java.exe",
-      "vmArgs": "--module-path C:\\javafx-sdk-21.0.6\\lib\\ --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
+      "javaExec": "C:\\Program Files\\Java\\jdk-25.0.2\\bin\\java.exe",
+      "vmArgs": "--module-path C:\\javafx-sdk-25.0.2\\lib\\ --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
     }
   ]
 }

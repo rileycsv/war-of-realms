@@ -2,13 +2,13 @@
   "java.project.sourcePaths": ["src"],
   "java.project.outputPath": "bin",
   "java.project.referencedLibraries": [
-    "C:/javafx-sdk-21.0.6/lib/**.jar"
+    "C:/javafx-sdk-25.0.2/lib/**/*.jar"
   ],
-  "java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot",
+  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-25.0.2",
   "java.configuration.runtimes": [
     {
-      "name": "JavaSE-21",
-      "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.10.7-hotspot",
+      "name": "JavaSE-25",
+      "path": "C:\\Program Files\\Java\\jdk-25.0.2\\",
       "default": true
     }
   ],
