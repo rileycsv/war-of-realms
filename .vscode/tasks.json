@@ -2,6 +2,22 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Create bin Directory",
+      "type": "shell",
+      "command": "if not exist bin mkdir bin",
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Compile Java Files",
       "type": "shell",
       "command": "C:\\Program Files\\Java\\jdk-25.0.2\\bin\\javac.exe",
@@ -23,6 +39,13 @@
         "src/environment/tile/VoidTile.java",
         "src/utils/Debug.java"
       ],
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "dependsOn": ["Create bin Directory"],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -45,6 +68,12 @@
         "-cp", "bin",
         "main.Main"
       ],
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
       "dependsOn": ["Compile Java Files"],
       "group": {
         "kind": "test",
