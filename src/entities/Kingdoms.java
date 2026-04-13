@@ -1,18 +1,6 @@
 package entities;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-public class Kingdoms {
-    private static Map<String, List<Object>> kingdomToImage = Map.of(
-        "Hussites", Arrays.asList(),
-        "Portuguese", Arrays.asList(),
-        "Mongolians", Arrays.asList(),
-        "Aztec", Arrays.asList(),
-        "English", Arrays.asList()
-    );
-    
+public class Kingdoms {    
     public static Unit[] getUnitsForKingdom(String kingdom, int playerID) {
         return switch (kingdom) {
             case "Hussites" -> new Unit[] {

@@ -16,7 +16,6 @@ import javafx.scene.shape.Rectangle;
 
 import utils.Debug;
 import core.GameManager;
-import core.Player;
 import entities.Unit;
 import environment.tile.*;
 
