@@ -6,23 +6,23 @@ import ui.ScreenFlows;
 
 public class battlefieldController {
 
-	private void chooseDifficulty(String difficulty, ActionEvent event) {
+	private void chooseDifficulty(int difficulty, ActionEvent event) {
 		MenuSelections.setBattlefieldDifficulty(difficulty);
 		ScreenFlows.show(FxStages.stage(event), 3);
 	}
 
 	@FXML
 	private void chooseEasy(ActionEvent event) {
-		chooseDifficulty("easy", event);
+		chooseDifficulty(0, event);
 	}
 
 	@FXML
 	private void chooseMedium(ActionEvent event) {
-		chooseDifficulty("medium", event);
+		chooseDifficulty(1, event);
 	}
 
 	@FXML
 	private void chooseHard(ActionEvent event) {
-		chooseDifficulty("hard", event);
+		chooseDifficulty(2, event);
 	}
 }
