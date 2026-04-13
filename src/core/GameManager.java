@@ -1,6 +1,7 @@
 package core;
 
 import entities.*;
+import environment.Board;
 
 /**
  * A global tracker for the current state of the game.
@@ -32,16 +33,13 @@ public class GameManager {
 	// =====================================================
 
 	/**
-	 * Returns the unit occupying a tile, or null if empty.
+	 * Returns the unit (if any) that is currently occupying a given tile on the board.
+	 * @param row // The coordinates of the tile to check.
+	 * @param col // The coordinates of the tile to check.
+	 * @return // The unit at the specified tile, or null if the tile is unoccupied.
 	 */
 	public static Unit getUnitAtTile(int row, int col) {
-		for (Player player : players) {
-			Unit unit = player.getUnitAtPosition(row, col);
-			if (unit != null) {
-				return unit;
-			}
-		}
-		return null;
+		return Board.getUnitAtTile(row, col);
 	}
 
 	/**

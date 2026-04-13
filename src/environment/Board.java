@@ -54,6 +54,10 @@ public class Board {
 	}
 
 	private static Unit[][] UNITS_BOARD = null;
+	
+	public static Unit[][] getUnitsBoard() {
+		return UNITS_BOARD;
+	}
 
 	/**
 	 * The predefined map layouts for the game.
@@ -403,14 +407,14 @@ public class Board {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.setFill(Color.web("#111111"));
 		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
+		
 		// Save graphics state
 		gc.save();
-
+		
 		// Apply camera transform
 		gc.translate(cameraX, cameraY);
 		gc.scale(zoom, zoom);
-
+		
 		// === RENDERING PIPELINE (PAINTER'S ALGORITHM) ===
 		char[][] board = getBoard();
 		for (int row = 0; row < board.length; row++) {
@@ -418,13 +422,10 @@ public class Board {
 				drawTile(gc, row, col);
 			}
 		}
-
+		
 		// Render highlights for selected unit (if any)
 		drawUnitHighlights(gc);
-
-		// Render all units
-		drawUnits(gc);
-
+		
 		// Restore graphics state
 		gc.restore();
 	}
@@ -610,7 +611,7 @@ public class Board {
 
 		return new int[] { r, c };
 	}
-
+	
 	/**
 	 * Makes a polygon as fallback for if no sprite texture file is found
 	 */
@@ -625,10 +626,9 @@ public class Board {
 		gc.closePath();
 		gc.clip();
 	}
-
+	
 	/**
 	 * Instantly moves the camera to center on a specific grid tile.
-	 * 
 	 * @param x The row coordinate
 	 * @param y The col coordinate
 	 */
@@ -639,7 +639,7 @@ public class Board {
 		cameraY = centerPt[1] + (FACE_H / 2.0);
 		render();
 	}
-
+	
 	/**
 	 * Calculates the middle tile of the current board layout and centers the camera
 	 * on it.
@@ -651,7 +651,7 @@ public class Board {
 
 		centerCameraOnTile(midRow, midCol);
 	}
-
+	
 	/**
 	 * Renders movement/attack highlights for the selected unit.
 	 * Separate from tile rendering to avoid spaghetti logic.
@@ -661,9 +661,9 @@ public class Board {
 		if (selected == null) {
 			return;
 		}
-
+		
 		char[][] board = getBoard();
-
+		
 		// Get valid move and attack tiles
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board[0].length; col++) {
@@ -671,9 +671,9 @@ public class Board {
 				if (row == selected.getX() && col == selected.getY()) {
 					continue;
 				}
-
+				
 				Color highlightColor = null;
-
+				
 				// Determine highlight color based on tile state
 				if (GameManager.isEnemyAtTile(row, col, selected)) {
 					// Red for enemy unit (attackable)
@@ -689,7 +689,7 @@ public class Board {
 						highlightColor = Color.web("#444444"); // Dark grey
 					}
 				}
-
+				
 				// Draw overlay if a highlight color was determined
 				if (highlightColor != null) {
 					drawTileHighlight(gc, row, col, highlightColor);
@@ -697,7 +697,7 @@ public class Board {
 			}
 		}
 	}
-
+	
 	/**
 	 * Draws a colored overlay on a tile (for movement/attack highlights).
 	 */
@@ -706,53 +706,21 @@ public class Board {
 		if (top[0] < 0 || top[1] < 0) {
 			return;
 		}
-
+		
 		gc.setFill(color);
 		gc.setGlobalAlpha(0.5); // Semi-transparent
-
+		
 		// Draw filled diamond shape (same as tile footprint)
 		double x = top[0];
 		double y = top[1];
 		double[] xs = { x, x + TILE_W / 2, x, x - TILE_W / 2 };
 		double[] ys = { y, y + FACE_H, y + 2 * FACE_H, y + FACE_H };
 		gc.fillPolygon(xs, ys, 4);
-
+		
 		gc.setGlobalAlpha(1.0);
 	}
 
-	/**
-	 * Renders all units on the board at their tile positions.
-	 */
-	private void drawUnits(GraphicsContext gc) {
-		for (Player player : GameManager.players) {
-			for (Unit unit : player.getUnits()) {
-				if (unit != null) {
-					drawUnit(gc, unit);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Draws a single unit sprite and health bar.
-	 */
-	private void drawUnit(GraphicsContext gc, Unit unit) {
-		int row = unit.getX();
-		int col = unit.getY();
-		double[] top = tileTopPoint(row, col);
-
-		if (top[0] < 0 || top[1] < 0) {
-			return;
-		}
-
-		// Position sprite at top of tile
-		Image img = unit.getImage();
-		if (img != null) {
-			double spriteX = top[0] - img.getWidth() / 2;
-			double spriteY = top[1] - img.getHeight() + FACE_H;
-			gc.drawImage(img, spriteX, spriteY);
-		}
-
-		// TODO: Draw health bar above/below sprite (implement as separate method)
-	}
+    public static Unit getUnitAtTile(int row, int col) {
+        return UNITS_BOARD[row][col];
+    }
 }
