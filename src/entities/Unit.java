@@ -14,25 +14,25 @@ import utils.Debug;
  */
 public abstract class Unit {
 	// The ID of the player that owns the unit
-	public int PLAYER_ID = -1; 
-	public String UNIT_TYPE = "debug.png";
+	protected int PLAYER_ID = -1; 
+	protected String UNIT_TYPE = "debug.png";
 	private Image sprite;
 	private String kingdom = "debug";
 
 	// Unit base stats
-	private int maxMovement;
-	private int health;
-	private int attackDamage;
-	private int attackRange;
+	protected int maxMovement;
+	protected int health;
+	protected int attackDamage;
+	protected int attackRange;
 
 	// Game state stats (These fluctuate during gameplay)
-	private int currentHealth;
-	private int currentMovement;
+	protected int currentHealth;
+	protected int currentMovement;
 
 	// The unit's current grid position
-	private int[] pos = {-1, -1}; // {row, col}
+	protected int[] pos = {-1, -1}; // {row, col}
 
-	private int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
+	protected int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
 
 	public Unit(int PID, String kingdom, int x, int y) {
 		this.PLAYER_ID = PID;

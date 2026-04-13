@@ -7,7 +7,7 @@ import entities.*;
  * Holds references to the players and dictates whose turn it is.
  */
 public class GameManager {
-	public static Player[] players = {};
+	public static Player[] players = new Player[2];
 	private static int activePlayer = -1;
 	private static Unit selectedUnit = null;
 	
