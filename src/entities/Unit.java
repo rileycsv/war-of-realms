@@ -70,7 +70,7 @@ public abstract class Unit {
 	 * @param col
 	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
 	 */
-	public abstract boolean[] canMoveTo(int row, int col);
+	public abstract boolean[][] canMoveTo(int row, int col);
 	/**
 	 * Determines if the unit can attack a target at the specified grid position based on its attack rules and the current game state.
 	 * This typically checks if the target is within the unit's attack range and if there are any obstacles in the way.
@@ -78,7 +78,7 @@ public abstract class Unit {
 	 * @param col
 	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
 	 */
-	public abstract boolean[] canAttack(int row, int col);
+	public abstract boolean[][] canAttack(int row, int col);
 
 	/**
 	 * Retrieves the dynamic path for this unit's sprite based on their owning
@@ -102,5 +102,13 @@ public abstract class Unit {
 	 */
 	public void endTurn() {
 		this.currentMovement = this.maxMovement;
+	}
+
+    public boolean canAttackTile(int i, int j) {
+		return canAttack(i, j)[i][j];
+	}
+
+    public boolean canMoveToTile(int i, int j) {
+		return canMoveTo(i, j)[i][j];
 	}
 }

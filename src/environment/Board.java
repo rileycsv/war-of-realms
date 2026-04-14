@@ -239,8 +239,10 @@ public class Board {
 			Unit unitAtTile = GameManager.getUnitAtTile(tile[0], tile[1]);
 
 			if (unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getActivePlayer()) {
-				// Clicked on own unit - select it
+				
 				GameManager.setSelectedUnit(unitAtTile);
+			} else if(unitAtTile == null && (unitAtTile.canAttackTile(tile[0], tile[1])) || unitAtTile.canMoveToTile(tile[0], tile[1])) {
+				
 			} else {
 				// Clicked on enemy, empty space, or neutral - deselect
 				GameManager.clearSelection();
@@ -421,9 +423,6 @@ public class Board {
 				drawTile(gc, row, col);
 			}
 		}
-		
-		// Render highlights for selected unit (if any)
-		drawUnitHighlights(gc);
 		
 		// Restore graphics state
 		gc.restore();
@@ -651,51 +650,7 @@ public class Board {
 		centerCameraOnTile(midRow, midCol);
 	}
 	
-	/**
-	 * Renders movement/attack highlights for the selected unit.
-	 * Separate from tile rendering to avoid spaghetti logic.
-	 */
-	private void drawUnitHighlights(GraphicsContext gc) {
-		Unit selected = GameManager.getSelectedUnit();
-		if (selected == null) {
-			return;
-		}
-		
-		char[][] board = getBoard();
-		
-		// Get valid move and attack tiles
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board[0].length; col++) {
-				// Skip the unit's own tile
-				if (row == selected.getX() && col == selected.getY()) {
-					continue;
-				}
-				
-				Color highlightColor = null;
-				
-				// Determine highlight color based on tile state
-				if (GameManager.isEnemyAtTile(row, col, selected)) {
-					// Red for enemy unit (attackable)
-					if (selected.canAttack(row, col)[0]) { // Simplified check; your canAttack may differ
-						highlightColor = Color.web("#FF3333");
-					}
-				} else if (GameManager.isAllyAtTile(row, col, selected)) {
-					// Allied unit blocks movement completely (no highlight)
-					continue;
-				} else {
-					// Empty tile - check if unit can move there
-					if (selected.canMoveTo(row, col)[0]) { // Simplified check
-						highlightColor = Color.web("#444444"); // Dark grey
-					}
-				}
-				
-				// Draw overlay if a highlight color was determined
-				if (highlightColor != null) {
-					drawTileHighlight(gc, row, col, highlightColor);
-				}
-			}
-		}
-	}
+	
 	
 	/**
 	 * Draws a colored overlay on a tile (for movement/attack highlights).

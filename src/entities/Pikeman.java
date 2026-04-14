@@ -8,13 +8,13 @@ public class Pikeman extends Unit {
     }
 
     @Override
-    public boolean[] canMoveTo(int row, int col) {
+    public boolean[][] canMoveTo(int row, int col) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'canMoveTo'");
     }
 
     @Override
-    public boolean[] canAttack(int row, int col) {
+    public boolean[][] canAttack(int row, int col) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'canAttack'");
     }
