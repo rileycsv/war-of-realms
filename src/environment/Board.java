@@ -137,7 +137,7 @@ public class Board {
 	 * Returns the current board
 	 */
 	public static char[][] getBoard() {
-		Debug.log(3, "Accessing board: " + CURRENT_BOARD);
+		// Debug.log(3, "Accessing board: " + CURRENT_BOARD);
 		return BOARD[CURRENT_BOARD];
 	}
 

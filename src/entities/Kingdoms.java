@@ -4,7 +4,7 @@ import utils.Debug;
 
 public class Kingdoms {
     /**
-     * Returns an array of Units corresponding to the specified kingdom, player ID, and center position.
+     * Returns an array of Units corresponding to the specified kingdom, player ID, and center starting position.
      * @param kingdom
      * @param playerID
      * @param cPos
@@ -26,11 +26,11 @@ public class Kingdoms {
             return new Unit[0];
         }
         
-        // Define the 3x3 grid offsets around center
+        // Define the 3x3 grid offsets around center point (cPos) for unit placement
         int[][] positions = {
-            {-1, -1}, {0, -1}, {1, -1},  // top row
-            {-1,  0}, {0,  0}, {1,  0},  // middle row
-            {-1,  1}, {0,  1}, {1,  1}   // bottom row
+            {-1, -1}, {0, -1}, {1, -1},  // top
+            {-1,  0}, {0,  0}, {1,  0},  // middle
+            {-1,  1}, {0,  1}, {1,  1}   // bottom
         };
         
         Unit[] units = new Unit[8];
