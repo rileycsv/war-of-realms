@@ -10,6 +10,12 @@ import environment.Board;
 public class Player {
 	private String kingdom = "debug";
 	
+	private Kingdoms kingdomUnits = new Kingdoms();
+	
+	public Unit[] getUnits(int x, int y) {
+		return Kingdoms.getUnitsForKingdom(kingdom, playerID, new int[] {x, y});
+	}
+	
 	private int playerID = -1;
 	
 	private int[] selectedUnitIndex = {-1, -1}; // Index of the currently selected unit in the UNITS array

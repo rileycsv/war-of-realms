@@ -111,4 +111,9 @@ public abstract class Unit {
     public boolean canMoveToTile(int i, int j) {
 		return canMoveTo(i, j)[i][j];
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Unit{type: %s, playerID: %d, pos: (%d,%d), health: %d/%d}%n", UNIT_TYPE, PLAYER_ID, pos[0], pos[1], currentHealth, health);
+	}
 }

@@ -239,6 +239,14 @@ public class Board {
 
 			Unit unitAtTile = GameManager.getUnitAtTile(tile[0], tile[1]);
 			
+			// During setup phase, clicking on a tile will place your units around that tile
+			if (GameManager.isSetupTurn() && unitAtTile != null) {
+				for(Unit unit : GameManager.getActivePlayer().getUnits(tile[0], tile[1])) {
+					UNITS_BOARD[tile[0]][tile[1]] = unit;
+				}
+				return;
+			}
+			
 			if (unitAtTile == null) {
 				Debug.log(2, "Clicked on empty tile at row=" + tile[0] + ", col=" + tile[1]);
 				GameManager.clearSelection();
@@ -253,8 +261,6 @@ public class Board {
 					GameManager.clearSelection();
 				}
 			}
-
-			
 		});
 
 		// When the canvas is scrolled, zoom logic and rerender

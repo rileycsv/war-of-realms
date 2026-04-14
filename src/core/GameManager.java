@@ -2,6 +2,7 @@ package core;
 
 import entities.*;
 import environment.Board;
+import utils.Debug;
 
 /**
  * A global tracker for the current state of the game.
@@ -12,12 +13,13 @@ public class GameManager {
 	public static Player[] players = new Player[2];
 	private static int activePlayerID = -1;
 	private static Unit selectedUnit = null;
-
+	
 	// =====================================================
 	// Selection Management
 	// =====================================================
-
+	
 	public static void setSelectedUnit(Unit unit) {
+		Debug.log(3, "Selected unit: " + unit);
 		selectedUnit = unit;
 	}
 
@@ -26,6 +28,7 @@ public class GameManager {
 	}
 
 	public static void clearSelection() {
+		Debug.log(3, "Clearing selected unit");
 		selectedUnit = null;
 	}
 
@@ -59,7 +62,7 @@ public class GameManager {
 		Unit blocker = getUnitAtTile(row, col);
 		return blocker != null && blocker.getPlayerID() != unit.getPlayerID();
 	}
-
+	
 	/**
 	 * Returns whether a tile is blocked by an ALLIED unit.
 	 */
@@ -67,7 +70,7 @@ public class GameManager {
 		Unit blocker = getUnitAtTile(row, col);
 		return blocker != null && blocker.getPlayerID() == unit.getPlayerID();
 	}
-
+	
 	// =====================================================
 	// Player & Turn Management
 	// =====================================================
@@ -75,16 +78,10 @@ public class GameManager {
 	public static int getActivePlayerID() {
 		return activePlayerID;
 	}
-
-	public static void setActivePlayerID(int id) {
-		if (id >= 0 && id < players.length) {
-			activePlayerID = id;
-		}
-	}
-
+	
 	public static void startGame() {
 		// Set TURN_COUNT to a negative number based on the amount of players
-		// For 2 players, turns will be: -2, -1, 0, 1, 2, 3...
+		// This is because the first few turns are "setup turns" where players place their units before the first player gets to move
 		TURN_COUNT = -players.length; 
 		
 		// Determine the first active player ID
@@ -100,10 +97,28 @@ public class GameManager {
 		// Null and bounds check just in case endTurn is clicked before game starts
 		if (activePlayerID >= 0 && activePlayerID < players.length && players[activePlayerID] != null) {
 			players[activePlayerID].endTurn();
+			clearSelection(); // Clear any selected unit at the end of the turn
 		}
 		
 		TURN_COUNT++;
 		updateActivePlayer();
+	}
+	
+	/**
+	 * Returns the current turn count
+	 * @return
+	 */
+	public static int getTurnCount() {
+		return TURN_COUNT;
+	}
+	
+	/**
+	 * Returns true if the game is currently in the setup phase (turn count < 0), where players are placing their initial units on the board
+	 *  and false if the game has started (turn count >= 0)
+	 * @return
+	 */
+	public static boolean isSetupTurn() {
+		return TURN_COUNT < 0;
 	}
 
 	/**
@@ -131,4 +146,8 @@ public class GameManager {
 			activePlayerID = 0; // Loop back to the first player
 		}
 	}
+
+    public static Player getActivePlayer() {
+        return players[activePlayerID];
+    }
 }
