@@ -56,7 +56,7 @@ public class Debug {
 	}
 	
 	public static void log(int l, String...args ) {
-		if (priority >= l) {
+		if (priority <= l) {
 			log(args);
 		}
 	}
@@ -70,7 +70,7 @@ public class Debug {
 	}
 	
 	public static void print(int l, String... args) {
-		if (priority >= l) {
+		if (priority <= l) {
 			print(args);
 		}
 	}
@@ -85,7 +85,7 @@ public class Debug {
 	}
 	
 	public static void println(int l, String...args) {
-		if (priority >= l) {
+		if (priority <= l) {
 			println(args);
 		}
 	}
@@ -97,7 +97,7 @@ public class Debug {
 	}
 	
 	public static void printf(int l, String fS, Object...args) {
-		if (priority >= l) {
+		if (priority <= l) {
 			printf(fS, args);
 		}
 	}
