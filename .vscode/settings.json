@@ -14,7 +14,7 @@
   ],
   "[java]": {
     "editor.defaultFormatter": "redhat.java",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "java.debug.settings.onBuildFailureProceed": true,
     "editor.trimAutoWhitespace": false
