@@ -8,22 +8,23 @@ import environment.Board;
  * Holds references to the players and dictates whose turn it is.
  */
 public class GameManager {
+	private static int TURN_COUNT;
 	public static Player[] players = new Player[2];
-	private static int activePlayer = -1;
+	private static int activePlayerID = -1;
 	private static Unit selectedUnit = null;
-	
+
 	// =====================================================
 	// Selection Management
 	// =====================================================
-	
+
 	public static void setSelectedUnit(Unit unit) {
 		selectedUnit = unit;
 	}
-	
+
 	public static Unit getSelectedUnit() {
 		return selectedUnit;
 	}
-	
+
 	public static void clearSelection() {
 		selectedUnit = null;
 	}
@@ -33,7 +34,9 @@ public class GameManager {
 	// =====================================================
 
 	/**
-	 * Returns the unit (if any) that is currently occupying a given tile on the board.
+	 * Returns the unit (if any) that is currently occupying a given tile on the
+	 * board.
+	 * 
 	 * @param row // The coordinates of the tile to check.
 	 * @param col // The coordinates of the tile to check.
 	 * @return // The unit at the specified tile, or null if the tile is unoccupied.
@@ -64,40 +67,42 @@ public class GameManager {
 		Unit blocker = getUnitAtTile(row, col);
 		return blocker != null && blocker.getPlayerID() == unit.getPlayerID();
 	}
-	
+
 	// =====================================================
 	// Player & Turn Management
 	// =====================================================
 
-	public static int getActivePlayer() {
-		return activePlayer;
+	public static int getActivePlayerID() {
+		return activePlayerID;
 	}
 
-	public static void setActivePlayer(int id) {
+	public static void setActivePlayerID(int id) {
 		if (id >= 0 && id < players.length) {
-			activePlayer = id;
+			activePlayerID = id;
 		}
 	}
-	
+
 	public static void startGame() {
 
 	}
-	
+
 	/**
-	 * Ends the current player's turn and advances to the next player. Also resets unit movement for the player ending their turn.
+	 * Ends the current player's turn and advances to the next player. Also resets
+	 * unit movement for the player ending their turn.
 	 * Called by the "End Turn" button in the UI.
 	 */
 	public static void endTurn() {
 		// End the current player's turn
-		players[activePlayer].endTurn();
+		players[activePlayerID].endTurn();
+		TURN_COUNT++;
 		nextTurn();
 	}
-	
+
 	private static void nextTurn() {
-		if (activePlayer < players.length - 1) {
-			activePlayer++; // Move to the next player
+		if (activePlayerID < players.length - 1) {
+			activePlayerID++; // Move to the next player
 		} else {
-			activePlayer = 0; // Loop back to the first player
+			activePlayerID = 0; // Loop back to the first player
 		}
 	}
 

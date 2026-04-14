@@ -53,7 +53,7 @@ public class Board {
 	}
 
 	private static Unit[][] UNITS_BOARD = null;
-	
+
 	public static Unit[][] getUnitsBoard() {
 		return UNITS_BOARD;
 	}
@@ -71,66 +71,87 @@ public class Board {
 	 * 'v' = Void
 	 */
 	private static final char[][][] BOARD = {
-		{
-			// Easy - open terrain, simple river loop (16x9)
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'm', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
-			{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' }
-		},
-		{
-			// Medium - mountain range with a winding river (18x10)
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'm', 'g', 'm', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'g', 'm', 'm', 'g', 'g' },
-			{ 'g', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'm', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'm', 'm', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g' }
-		},
-		{
-			// Hard - dense terrain, narrow passages, dual river channels (20x11)
-			{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm', 'g' },
-			{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm', 'g' },
-			{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
-			{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
-			{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'g' },
-			{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
-			{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' }
-		},
-		{
-			// Two player, river divide
-			{ 'm', 'm', 'm', 'm', 'g', 'r', 'g', 'g', 'm', 'm' },
-			{ 'm', 'm', 'm', 'g', 'g', 'r', 'g', 'g', 'g', 'm' },
-			{ 'm', 'm', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'm' },
-			{ 'm', 'm', 'g', 'g', 'g', 'r', 'm', 'g', 'm', 'm' },
-			{ 'm', 'm', 'm', 'm', 'm', 'r', 'm', 'm', 'm', 'm' }
-		},
-		{
-			// DEBUG map
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
-			{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'v', 'v', 'v', 'g' },
-			{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'v', 'g' },
-			{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'g', 'v', 'v', 'g', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-			{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' },
-			{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' }
-		}
+			{
+					// Easy - open terrain, simple river loop (16x9)
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'm', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' }
+			},
+			{
+					// Medium - mountain range with a winding river (18x10)
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'm', 'g', 'm', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'g', 'm', 'm', 'g', 'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'm', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'm', 'm', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g', 'g' }
+			},
+			{
+					// Hard - dense terrain, narrow passages, dual river channels (20x11)
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm',
+							'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm',
+							'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
+							'g' },
+					{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
+							'm' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
+							'g' }
+			},
+			{
+					// Two player, river divide
+					{ 'm', 'm', 'm', 'm', 'g', 'r', 'g', 'g', 'm', 'm' },
+					{ 'm', 'm', 'm', 'g', 'g', 'r', 'g', 'g', 'g', 'm' },
+					{ 'm', 'm', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'm' },
+					{ 'm', 'm', 'g', 'g', 'g', 'r', 'm', 'g', 'm', 'm' },
+					{ 'm', 'm', 'm', 'm', 'm', 'r', 'm', 'm', 'm', 'm' }
+			},
+			{
+					// DEBUG map
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
+							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g',
+							'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g',
+							'v', 'g', 'v', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g',
+							'v', 'g', 'v', 'g', 'v', 'v', 'v', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g',
+							'v', 'g', 'v', 'g', 'g', 'g', 'v', 'g' },
+					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'g', 'v', 'v',
+							'g', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
+							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
+							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
+							'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' },
+					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
+							'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' }
+			}
 	};
 
 	/**
@@ -237,16 +258,23 @@ public class Board {
 			}
 
 			Unit unitAtTile = GameManager.getUnitAtTile(tile[0], tile[1]);
-
-			if (unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getActivePlayer()) {
-				
-				GameManager.setSelectedUnit(unitAtTile);
-			} else if(unitAtTile == null && (unitAtTile.canAttackTile(tile[0], tile[1])) || unitAtTile.canMoveToTile(tile[0], tile[1])) {
-				
-			} else {
-				// Clicked on enemy, empty space, or neutral - deselect
+			
+			if (unitAtTile == null) {
+				Debug.log(2, "Clicked on empty tile at row=" + tile[0] + ", col=" + tile[1]);
 				GameManager.clearSelection();
+			} else {
+				if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
+
+					GameManager.setSelectedUnit(unitAtTile);
+				} else if ((unitAtTile.canAttackTile(tile[0], tile[1])) || unitAtTile.canMoveToTile(tile[0], tile[1])) {
+
+				} else {
+					// Clicked on enemy, empty space, or neutral - deselect
+					GameManager.clearSelection();
+				}
 			}
+
+			
 		});
 
 		// When the canvas is scrolled, zoom logic and rerender
@@ -336,7 +364,7 @@ public class Board {
 		if (turnIndicatorBox == null || turnIndicatorBox.getChildren().isEmpty())
 			return;
 
-		int activeIndex = GameManager.getActivePlayer();
+		int activeIndex = GameManager.getActivePlayerID();
 
 		for (int i = 0; i < turnIndicatorBox.getChildren().size(); i++) {
 			StackPane container = (StackPane) turnIndicatorBox.getChildren().get(i);
@@ -406,25 +434,30 @@ public class Board {
 	 */
 	private void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		gc.setImageSmoothing(false);
+		gc.setTransform(1, 0, 0, 1, 0, 0); // Reset transform before every frame
 		gc.setFill(Color.web("#111111"));
 		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
 		
-		// Save graphics state
 		gc.save();
 		
-		// Apply camera transform
-		gc.translate(cameraX, cameraY);
+		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0); // Center to viewport
 		gc.scale(zoom, zoom);
+		gc.translate(-cameraX, -cameraY);              // Offset by negative camera pos
 		
-		// === RENDERING PIPELINE (PAINTER'S ALGORITHM) ===
 		char[][] board = getBoard();
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board[0].length; col++) {
-				drawTile(gc, row, col);
+		int rows = board.length;
+		int cols = board[0].length;
+		
+		for (int diag = 0; diag < rows + cols - 1; diag++) {
+			int rMin = Math.max(0, diag - (cols - 1));
+			int rMax = Math.min(diag, rows - 1);
+			for (int r = rMin; r <= rMax; r++) {
+				drawTile(gc, r, diag - r);
 			}
 		}
 		
-		// Restore graphics state
 		gc.restore();
 	}
 
@@ -483,6 +516,29 @@ public class Board {
 				gc.fillRect(defaultDrawX, defaultDrawY, TILE_W, SPRITE_H);
 			}
 			gc.restore();
+		}
+	}
+
+	/**
+	 * Draws a unit on top of the tile, handling sprite alignment based on the
+	 * tile's top vertex
+	 * and the unit sprite's dimensions.
+	 * 
+	 * @param gc
+	 * @param unit
+	 */
+	public void drawUnit(GraphicsContext gc, Unit unit) {
+		double[] top = tileTopPoint(unit.getX(), unit.getY());
+		Image img = unit.getImage();
+
+		if (img != null) {
+			double imgW = img.getWidth();
+			double imgH = img.getHeight();
+
+			double drawX = top[0] - (imgW / 2.0);
+			double drawY = (top[1] + SPRITE_H) - imgH;
+
+			gc.drawImage(img, drawX, drawY, imgW, imgH);
 		}
 	}
 
@@ -609,7 +665,7 @@ public class Board {
 
 		return new int[] { r, c };
 	}
-	
+
 	/**
 	 * Makes a polygon as fallback for if no sprite texture file is found
 	 */
@@ -624,9 +680,10 @@ public class Board {
 		gc.closePath();
 		gc.clip();
 	}
-	
+
 	/**
 	 * Instantly moves the camera to center on a specific grid tile.
+	 * 
 	 * @param x The row coordinate
 	 * @param y The col coordinate
 	 */
@@ -637,7 +694,7 @@ public class Board {
 		cameraY = centerPt[1] + (FACE_H / 2.0);
 		render();
 	}
-	
+
 	/**
 	 * Calculates the middle tile of the current board layout and centers the camera
 	 * on it.
@@ -649,32 +706,8 @@ public class Board {
 
 		centerCameraOnTile(midRow, midCol);
 	}
-	
-	
-	
-	/**
-	 * Draws a colored overlay on a tile (for movement/attack highlights).
-	 */
-	private void drawTileHighlight(GraphicsContext gc, int row, int col, Color color) {
-		double[] top = tileTopPoint(row, col);
-		if (top[0] < 0 || top[1] < 0) {
-			return;
-		}
-		
-		gc.setFill(color);
-		gc.setGlobalAlpha(0.5); // Semi-transparent
-		
-		// Draw filled diamond shape (same as tile footprint)
-		double x = top[0];
-		double y = top[1];
-		double[] xs = { x, x + TILE_W / 2, x, x - TILE_W / 2 };
-		double[] ys = { y, y + FACE_H, y + 2 * FACE_H, y + FACE_H };
-		gc.fillPolygon(xs, ys, 4);
-		
-		gc.setGlobalAlpha(1.0);
-	}
 
-    public static Unit getUnitAtTile(int row, int col) {
-        return UNITS_BOARD[row][col];
-    }
+	public static Unit getUnitAtTile(int row, int col) {
+		return UNITS_BOARD[row][col];
+	}
 }

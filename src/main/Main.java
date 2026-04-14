@@ -21,7 +21,7 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		// Enable debug
 		Debug.enable();
-		Debug.setDebugPriority(2);
+		Debug.setDebugPriority(0);
 		Debug.println(2, "Debug enabled");
 
 		primaryStage = stage;
