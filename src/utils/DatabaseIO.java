@@ -1,4 +1,5 @@
 package utils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ public class DatabaseIO {
       //Creating the unit value that is returned
       int returnedValue = 0;
       //This line connects with the database in this file
-      try(Connection connection = DriverManager.getConnection("jdbc:sqlite:UnitValues.db")) {
+      try(Connection connection = DriverManager.getConnection("jdbc:sqlite:assets/UnitValues.db")) {
          //This creates a statement object
          Statement statement = connection.createStatement();
          statement.setQueryTimeout(1);
