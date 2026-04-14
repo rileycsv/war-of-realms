@@ -209,26 +209,18 @@ public class Board {
 		// Initialize the canvas with the width and height of the board
 		canvas = new Canvas(CANVAS_W, CANVAS_H);
 		StackPane root = new StackPane(canvas);
+		Button endTurnButton = new Button("End Turn");
+		endTurnButton.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
+		StackPane.setAlignment(endTurnButton, Pos.BOTTOM_RIGHT);
 		// Initialize the scene with a stack containing the canvas
 		Scene scene = new Scene(root, CANVAS_W, CANVAS_H);
-
-		// 1. Create the Turn Indicator HUD
-		turnIndicatorBox = createTurnIndicator();
-
-		// 2. Create the StackPane and add both Canvas and HUD
-		root.setStyle("-fx-background-color: #111111;");
-		root.getChildren().addAll(turnIndicatorBox);
-		turnIndicatorBox.toFront();
+		
+		root.setStyle("-fx-background-color: #ffffff;");
+		root.getChildren().addAll(endTurnButton);
 		canvas.setManaged(false);
-
-		// 3. Align the HUD to the top center and add some margin
-		StackPane.setAlignment(turnIndicatorBox, Pos.TOP_CENTER);
-		StackPane.setMargin(turnIndicatorBox, new Insets(15, 0, 0, 0));
-
-		Button endTurnButton = new Button("End Turn");
+		
 		endTurnButton.setOnAction(e -> {
 			GameManager.endTurn();
-			updateTurnIndicatorUI();
 		});
 
 		// Get cursor position when cursor moves
@@ -250,6 +242,8 @@ public class Board {
 		canvas.setOnMouseClicked(e -> {
 			double[] world = screenToWorld(e.getX(), e.getY());
 			int[] tile = canvasToTile(world[0], world[1]);
+			
+			centerCameraOnTile(tile[0], tile[1]);
 
 			if (tile[0] == -1 || tile[1] == -1) {
 				// Clicked outside board
@@ -329,64 +323,11 @@ public class Board {
 		canvas.requestFocus();
 		return scene;
 	}
-
-	/**
-	 * Builds the UI element for the turn indicator.
-	 */
-	private HBox createTurnIndicator() {
-		HBox hbox = new HBox(10);
-		hbox.setAlignment(Pos.CENTER);
-		hbox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
-		// This allows mouse clicks to pass through the empty space
-		// between and around your avatars, down to the canvas below
-		hbox.setPickOnBounds(false);
-
-		// Now it's safe to loop through the actual players
-		for (int i = 0; i < GameManager.players.length; i++) {
-			Rectangle avatarPlaceholder = new Rectangle(50, 50, Color.DARKSLATEGRAY);
-
-			StackPane avatarContainer = new StackPane(avatarPlaceholder);
-			avatarContainer.setPrefSize(54, 54);
-			avatarContainer.setStyle("-fx-border-color: #333333; -fx-border-width: 2; -fx-background-color: black;");
-
-			hbox.getChildren().add(avatarContainer);
-		}
-
-		return hbox;
-	}
-
-	/**
-	 * Call this method whenever a turn ends to update the UI highlights.
-	 */
-	public void updateTurnIndicatorUI() {
-		// Don't do anything if the box wasn't created or has no avatars
-		if (turnIndicatorBox == null || turnIndicatorBox.getChildren().isEmpty())
-			return;
-
-		int activeIndex = GameManager.getActivePlayerID();
-
-		for (int i = 0; i < turnIndicatorBox.getChildren().size(); i++) {
-			StackPane container = (StackPane) turnIndicatorBox.getChildren().get(i);
-
-			if (i == activeIndex && activeIndex != -1) {
-				// Active Player
-				container.setStyle("-fx-border-color: #FFD700; -fx-border-width: 4; -fx-background-color: black;");
-				container.setScaleX(1.1);
-				container.setScaleY(1.1);
-			} else {
-				// Inactive Player
-				container.setStyle("-fx-border-color: #333333; -fx-border-width: 2; -fx-background-color: black;");
-				container.setScaleX(1.0);
-				container.setScaleY(1.0);
-			}
-		}
-	}
-
+	
 	// =========================================================================
 	// Camera / Coordinate Logic
 	// =========================================================================
-
+	
 	/**
 	 * Translates raw window/screen coordinates into absolute world coordinates,
 	 * accounting for current camera pan and zoom levels.
@@ -403,7 +344,7 @@ public class Board {
 		// The -6.5 is needed for some reason since the
 		return new double[] { wx, wy - 6.5 };
 	}
-
+	
 	/**
 	 * Run when canvas is scrolled or mouse is moved to update tile highlights.
 	 */
@@ -421,11 +362,11 @@ public class Board {
 			render();
 		}
 	}
-
+	
 	// =========================================================================
 	// Rendering
 	// =========================================================================
-
+	
 	/**
 	 * Core rendering pipeline.
 	 * Clears the canvas, applies the global camera translation and zoom transforms,
@@ -434,27 +375,48 @@ public class Board {
 	 */
 	private void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-
+		
 		gc.setImageSmoothing(false);
-		gc.setTransform(1, 0, 0, 1, 0, 0); // Reset transform before every frame
+		gc.setTransform(1, 0, 0, 1, 0, 0);
 		gc.setFill(Color.web("#111111"));
 		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
 		
 		gc.save();
-		
-		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0); // Center to viewport
+		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0);
 		gc.scale(zoom, zoom);
-		gc.translate(-cameraX, -cameraY);              // Offset by negative camera pos
+		gc.translate(-cameraX, -cameraY);
 		
+		// Build highlight maps once per frame from the selected unit
 		char[][] board = getBoard();
 		int rows = board.length;
 		int cols = board[0].length;
 		
+		boolean[][] moveHighlight   = new boolean[rows][cols];
+		boolean[][] attackHighlight = new boolean[rows][cols];
+		
+		Unit selected = GameManager.getSelectedUnit(); // You'll need to add this to GameManager
+		if (selected != null) {
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
+					moveHighlight[r][c]   = selected.canMoveToTile(r, c);
+					attackHighlight[r][c] = selected.canAttackTile(r, c);
+				}
+			}
+		}
+		
+		// Painter's algorithm: draw tile, then its highlight, then its unit —
+		// all at the same diagonal depth so later diagonals correctly overlap earlier ones.
 		for (int diag = 0; diag < rows + cols - 1; diag++) {
 			int rMin = Math.max(0, diag - (cols - 1));
 			int rMax = Math.min(diag, rows - 1);
 			for (int r = rMin; r <= rMax; r++) {
-				drawTile(gc, r, diag - r);
+				int c = diag - r;
+				drawTile(gc, r, c);
+				drawTileHighlight(gc, r, c, moveHighlight, attackHighlight, selected);
+				Unit unitHere = getUnitAtTile(r, c);
+				if (unitHere != null) {
+					drawUnit(gc, unitHere);
+				}
 			}
 		}
 		
@@ -528,18 +490,57 @@ public class Board {
 	 * @param unit
 	 */
 	public void drawUnit(GraphicsContext gc, Unit unit) {
-		double[] top = tileTopPoint(unit.getX(), unit.getY());
+		double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
 		Image img = unit.getImage();
 
 		if (img != null) {
 			double imgW = img.getWidth();
 			double imgH = img.getHeight();
-
 			double drawX = top[0] - (imgW / 2.0);
 			double drawY = (top[1] + SPRITE_H) - imgH;
-
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
 		}
+	}
+	
+	/**
+	 * Draws a semi-transparent overlay on a tile to indicate move/attack range
+	 * or the currently selected unit's position.
+	 */
+	private void drawTileHighlight(GraphicsContext gc, int row, int col,
+									boolean[][] moveHL, boolean[][] attackHL,
+									Unit selected) {
+		// Determine what color to overlay, if any
+		Color overlayColor = null;
+
+		if (selected != null && selected.getX() == row && selected.getY() == col) {
+			overlayColor = new Color(1.0, 1.0, 0.0, 0.45); // Yellow: selected unit's tile
+		} else if (attackHL[row][col]) {
+			overlayColor = new Color(1.0, 0.15, 0.15, 0.40); // Red: attackable
+		} else if (moveHL[row][col]) {
+			overlayColor = new Color(0.25, 0.65, 1.0, 0.35); // Blue: reachable
+		}
+
+		if (overlayColor == null) return;
+
+		double[] top = tileTopPoint(row, col);
+		double hw = TILE_W / 2.0;
+		double hh = FACE_H / 2.0;
+
+		gc.save();
+
+		// Clip to the diamond face so the overlay doesn't bleed onto adjacent tiles
+		gc.beginPath();
+		gc.moveTo(top[0],      top[1]);
+		gc.lineTo(top[0] + hw, top[1] + hh);
+		gc.lineTo(top[0],      top[1] + FACE_H);
+		gc.lineTo(top[0] - hw, top[1] + hh);
+		gc.closePath();
+		gc.clip();
+
+		gc.setFill(overlayColor);
+		gc.fillRect(top[0] - hw, top[1], TILE_W, FACE_H);
+
+		gc.restore();
 	}
 
 	private static final Tile GRASS_TILE = new GrassTile();
