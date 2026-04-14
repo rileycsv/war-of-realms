@@ -94,17 +94,28 @@ public class Board {
 			},
 			{
 					// Hard - dense terrain, narrow passages, dual river channels (20x11)
-					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm', 'g' },
-					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm', 'g' },
-					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
-					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
-					{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
-					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'g' },
-					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
-					{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm' },
-					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' }
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm',
+							'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm',
+							'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g',
+							'g' },
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
+							'g' },
+					{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
+							'm' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
+							'g' }
 			},
 			{
 					// Two player, river divide
@@ -193,17 +204,17 @@ public class Board {
 		// Initialize the canvas with the width and height of the board
 		canvas = new Canvas(CANVAS_W, CANVAS_H);
 		canvas.setFocusTraversable(true);
-		
+
 		StackPane root = new StackPane(canvas);
 		Button endTurnButton = new Button("End Turn");
 		endTurnButton.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
 		StackPane.setAlignment(endTurnButton, Pos.BOTTOM_RIGHT);
 		// Initialize the scene with a stack containing the canvas
 		Scene scene = new Scene(root, CANVAS_W, CANVAS_H);
-		
+
 		root.setStyle("-fx-background-color: #ffffff;");
 		root.getChildren().addAll(endTurnButton);
-		
+
 		endTurnButton.setOnAction(e -> {
 			GameManager.endTurn();
 			canvas.requestFocus(); // Return focus to the canvas after clicking the button
@@ -227,34 +238,40 @@ public class Board {
 
 		canvas.setOnMouseClicked(e -> {
 			double[] world = screenToWorld(e.getX(), e.getY());
-			int[] tile = canvasToTile(world[0], world[1]);
-			
-			centerCameraOnTile(tile[0], tile[1]);
+			int[] clickedTile = canvasToTile(world[0], world[1]);
 
-			if (tile[0] == -1 || tile[1] == -1) {
+			if (GameManager.isSetupTurn()) {
+				centerCameraOnTile(clickedTile[0], clickedTile[1]);
+			}
+
+			if (clickedTile[0] == -1 || clickedTile[1] == -1) {
 				// Clicked outside board
+				Debug.log(3, "Clicked outside of board.");
 				GameManager.clearSelection();
 				return;
 			}
 
-			Unit unitAtTile = GameManager.getUnitAtTile(tile[0], tile[1]);
-			
+			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
+
 			// During setup phase, clicking on a tile will place your units around that tile
-			if (GameManager.isSetupTurn() && unitAtTile != null) {
-				for(Unit unit : GameManager.getActivePlayer().getUnits(tile[0], tile[1])) {
-					UNITS_BOARD[tile[0]][tile[1]] = unit;
+			if (GameManager.isSetupTurn() && unitAtTile == null) {
+				Debug.log(2, "Placing units for player " + GameManager.getActivePlayerID() + " at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
+				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
+					UNITS_BOARD[clickedTile[0]][clickedTile[1]] = unit;
 				}
+				GameManager.endTurn();
 				return;
 			}
-			
+
 			if (unitAtTile == null) {
-				Debug.log(2, "Clicked on empty tile at row=" + tile[0] + ", col=" + tile[1]);
+				Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
 				GameManager.clearSelection();
 			} else {
 				if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
 
 					GameManager.setSelectedUnit(unitAtTile);
-				} else if ((unitAtTile.canAttackTile(tile[0], tile[1])) || unitAtTile.canMoveToTile(tile[0], tile[1])) {
+				} else if ((unitAtTile.canAttackTile(clickedTile[0], clickedTile[1]))
+						|| unitAtTile.canMoveToTile(clickedTile[0], clickedTile[1])) {
 
 				} else {
 					// Clicked on enemy, empty space, or neutral - deselect
@@ -315,11 +332,11 @@ public class Board {
 		canvas.requestFocus();
 		return scene;
 	}
-	
+
 	// =========================================================================
 	// Camera / Coordinate Logic
 	// =========================================================================
-	
+
 	/**
 	 * Translates raw window/screen coordinates into absolute world coordinates,
 	 * accounting for current camera pan and zoom levels.
@@ -336,7 +353,7 @@ public class Board {
 		// The -6.5 is needed for some reason since the
 		return new double[] { wx, wy - 6.5 };
 	}
-	
+
 	/**
 	 * Run when canvas is scrolled or mouse is moved to update tile highlights.
 	 */
@@ -354,11 +371,11 @@ public class Board {
 			render();
 		}
 	}
-	
+
 	// =========================================================================
 	// Rendering
 	// =========================================================================
-	
+
 	/**
 	 * Core rendering pipeline.
 	 * Clears the canvas, applies the global camera translation and zoom transforms,
@@ -367,37 +384,38 @@ public class Board {
 	 */
 	private void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
+
 		gc.setImageSmoothing(false);
 		gc.setTransform(1, 0, 0, 1, 0, 0);
 		gc.setFill(Color.web("#111111"));
 		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
-		
+
 		gc.save();
 		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0);
 		gc.scale(zoom, zoom);
 		gc.translate(-cameraX, -cameraY);
-		
+
 		// Build highlight maps once per frame from the selected unit
 		char[][] board = getBoard();
 		int rows = board.length;
 		int cols = board[0].length;
-		
-		boolean[][] moveHighlight   = new boolean[rows][cols];
+
+		boolean[][] moveHighlight = new boolean[rows][cols];
 		boolean[][] attackHighlight = new boolean[rows][cols];
-		
+
 		Unit selected = GameManager.getSelectedUnit(); // You'll need to add this to GameManager
 		if (selected != null) {
 			for (int r = 0; r < rows; r++) {
 				for (int c = 0; c < cols; c++) {
-					moveHighlight[r][c]   = selected.canMoveToTile(r, c);
+					moveHighlight[r][c] = selected.canMoveToTile(r, c);
 					attackHighlight[r][c] = selected.canAttackTile(r, c);
 				}
 			}
 		}
-		
+
 		// Painter's algorithm: draw tile, then its highlight, then its unit —
-		// all at the same diagonal depth so later diagonals correctly overlap earlier ones.
+		// all at the same diagonal depth so later diagonals correctly overlap earlier
+		// ones.
 		for (int diag = 0; diag < rows + cols - 1; diag++) {
 			int rMin = Math.max(0, diag - (cols - 1));
 			int rMax = Math.min(diag, rows - 1);
@@ -411,7 +429,7 @@ public class Board {
 				}
 			}
 		}
-		
+
 		gc.restore();
 	}
 
@@ -493,14 +511,14 @@ public class Board {
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
 		}
 	}
-	
+
 	/**
 	 * Draws a semi-transparent overlay on a tile to indicate move/attack range
 	 * or the currently selected unit's position.
 	 */
 	private void drawTileHighlight(GraphicsContext gc, int row, int col,
-									boolean[][] moveHL, boolean[][] attackHL,
-									Unit selected) {
+			boolean[][] moveHL, boolean[][] attackHL,
+			Unit selected) {
 		// Determine what color to overlay, if any
 		Color overlayColor = null;
 
@@ -512,7 +530,8 @@ public class Board {
 			overlayColor = new Color(0.25, 0.65, 1.0, 0.35); // Blue: reachable
 		}
 
-		if (overlayColor == null) return;
+		if (overlayColor == null)
+			return;
 
 		double[] top = tileTopPoint(row, col);
 		double hw = TILE_W / 2.0;
@@ -522,9 +541,9 @@ public class Board {
 
 		// Clip to the diamond face so the overlay doesn't bleed onto adjacent tiles
 		gc.beginPath();
-		gc.moveTo(top[0],      top[1]);
+		gc.moveTo(top[0], top[1]);
 		gc.lineTo(top[0] + hw, top[1] + hh);
-		gc.lineTo(top[0],      top[1] + FACE_H);
+		gc.lineTo(top[0], top[1] + FACE_H);
 		gc.lineTo(top[0] - hw, top[1] + hh);
 		gc.closePath();
 		gc.clip();

@@ -22,20 +22,20 @@ public class GameManager {
 		Debug.log(3, "Selected unit: " + unit);
 		selectedUnit = unit;
 	}
-
+	
 	public static Unit getSelectedUnit() {
 		return selectedUnit;
 	}
-
+	
 	public static void clearSelection() {
 		Debug.log(3, "Clearing selected unit");
 		selectedUnit = null;
 	}
-
+	
 	// =====================================================
 	// Utility Methods - Unit Queries
 	// =====================================================
-
+	
 	/**
 	 * Returns the unit (if any) that is currently occupying a given tile on the
 	 * board.
@@ -94,6 +94,7 @@ public class GameManager {
 	 * Called by the "End Turn" button in the UI.
 	 */
 	public static void endTurn() {
+		Debug.log(2, "Ending turn for player " + activePlayerID);
 		// Null and bounds check just in case endTurn is clicked before game starts
 		if (activePlayerID >= 0 && activePlayerID < players.length && players[activePlayerID] != null) {
 			players[activePlayerID].endTurn();
