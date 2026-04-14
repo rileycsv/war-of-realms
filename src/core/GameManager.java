@@ -83,7 +83,12 @@ public class GameManager {
 	}
 
 	public static void startGame() {
-
+		// Set TURN_COUNT to a negative number based on the amount of players
+		// For 2 players, turns will be: -2, -1, 0, 1, 2, 3...
+		TURN_COUNT = -players.length; 
+		
+		// Determine the first active player ID
+		updateActivePlayer(); 
 	}
 
 	/**
@@ -92,17 +97,22 @@ public class GameManager {
 	 * Called by the "End Turn" button in the UI.
 	 */
 	public static void endTurn() {
-		// End the current player's turn
-		players[activePlayerID].endTurn();
+		// Null and bounds check just in case endTurn is clicked before game starts
+		if (activePlayerID >= 0 && activePlayerID < players.length && players[activePlayerID] != null) {
+			players[activePlayerID].endTurn();
+		}
+		
 		TURN_COUNT++;
-		nextTurn();
+		updateActivePlayer();
 	}
 
-	private static void nextTurn() {
-		if (activePlayerID < players.length - 1) {
-			activePlayerID++; // Move to the next player
-		} else {
-			activePlayerID = 0; // Loop back to the first player
+	/**
+	 * Calculates and sets the activePlayerID based strictly on the TURN_COUNT.
+	 * Automatically handles wrapping and negative setup turns using floorMod.
+	 */
+	private static void updateActivePlayer() {
+		if (players.length > 0) {
+			activePlayerID = Math.floorMod(TURN_COUNT, players.length);
 		}
 	}
 
@@ -112,5 +122,13 @@ public class GameManager {
 	 */
 	public static int getPlayerOfUnit(Unit unit) {
 		return unit.getPlayerID();
+	}
+
+	private static void nextTurn() {
+		if (activePlayerID < players.length - 1) {
+			activePlayerID++; // Move to the next player
+		} else {
+			activePlayerID = 0; // Loop back to the first player
+		}
 	}
 }
