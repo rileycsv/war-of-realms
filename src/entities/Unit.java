@@ -15,6 +15,7 @@ import utils.Debug;
 public abstract class Unit {
 	// The ID of the player that owns the unit
 	protected int PLAYER_ID = -1; 
+	private int unitID = -1; // Unique identifier for the unit (can be used for tracking specific units)
 	protected String UNIT_TYPE;
 	private Image sprite;
 	private String kingdom = "debug";
@@ -35,8 +36,9 @@ public abstract class Unit {
 	protected int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
 	
 	// Update the constructor to require the unitType
-	public Unit(int PID, String kingdom, String unitType, int x, int y) {
+	public Unit(int PID, int UID, String kingdom, String unitType, int x, int y) {
 		this.PLAYER_ID = PID;
+		this.unitID = UID;
 		this.kingdom = kingdom;
 		this.UNIT_TYPE = unitType; 
 
@@ -49,6 +51,10 @@ public abstract class Unit {
 
 	public int getPlayerID() {
 		return this.PLAYER_ID;
+	}
+	
+	public int getUnitID() {
+		return this.unitID;
 	}
 
 	public int getHealth() { return this.health; }
@@ -72,8 +78,9 @@ public abstract class Unit {
 	 * @return
 	 */
 	public int[] getPos() {
-		Debug.log(3, String.format("Unit.getPos() called for %s at (%d,%d)", UNIT_TYPE, pos[0], pos[1]));
-		return GameManager.getPositionOfUnit(this);
+		Debug.log(3, String.format("Unit.getPos() called for %s/%s at (%d,%d)", kingdom, UNIT_TYPE, pos[0], pos[1]));
+		// return GameManager.getPositionOfUnit(this);
+		return this.pos;
 	}
 
 	public void moveTo(int row, int col) {

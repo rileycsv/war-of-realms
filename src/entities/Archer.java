@@ -2,8 +2,8 @@ package entities;
 
 public class Archer extends Unit {
 
-    public Archer(int PID, String kingdom, int x, int y) {
-        super(PID, kingdom, "archer.png", x, y);
+    public Archer(int PID, int UID, String kingdom, int x, int y) {
+        super(PID, UID, kingdom, "archer.png", x, y);
         this.maxMovement = 3;
         this.health = 10;
         this.attackDamage = 3;

@@ -2,8 +2,8 @@ package entities;
 
 public class Pikeman extends Unit {
 
-    public Pikeman(int PID, String kingdom, int x, int y) {
-        super(PID, kingdom, "pikeman.png", x, y);
+    public Pikeman(int PID, int UID, String kingdom, int x, int y) {
+        super(PID, UID, kingdom, "pikeman.png", x, y);
         this.maxMovement = 3;
         this.health = 10;
         this.attackDamage = 3;

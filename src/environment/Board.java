@@ -236,7 +236,8 @@ public class Board {
 
 			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
 			
-			if (GameManager.isSetupTurn() && unitAtTile == null) {
+			// Set up 
+			if (GameManager.isSetupTurn() && unitAtTile == null && spaceClearAroundTile(clickedTile[0], clickedTile[1])) {
 				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
 					if (unit == null) { continue; }
 					int r = unit.getX(), c = unit.getY();
@@ -249,23 +250,6 @@ public class Board {
 				return;
 			}
 
-			// During setup phase, clicking on a tile will place your units around that tile
-			if (GameManager.isSetupTurn() && unitAtTile == null) {
-				Debug.log(2, "Placing units for player " + GameManager.getActivePlayerID() + " at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
-				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
-					if (unit == null) {
-						continue;
-					}
-					int r = unit.getX(), c = unit.getY();
-					if (r >= 0 && r < UNITS_BOARD.length
-							&& c >= 0 && c < UNITS_BOARD[0].length) {
-						UNITS_BOARD[r][c] = unit;
-					}
-				}
-				GameManager.endTurn();
-				return;
-			}
-
 			if (unitAtTile == null) {
 				Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
 				GameManager.clearSelection();
@@ -273,8 +257,7 @@ public class Board {
 				if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
 
 					GameManager.setSelectedUnit(unitAtTile);
-				} else if ((unitAtTile.canAttackTile(clickedTile[0], clickedTile[1]))
-						|| unitAtTile.canMoveToTile(clickedTile[0], clickedTile[1])) {
+				} else if ((unitAtTile.canAttackTile(clickedTile[0], clickedTile[1])) || unitAtTile.canMoveToTile(clickedTile[0], clickedTile[1])) {
 
 				} else {
 					// Clicked on enemy, empty space, or neutral - deselect
@@ -751,6 +734,28 @@ public class Board {
 	}
 
 	public static Unit getUnitAtTile(int row, int col) {
+		// Debug.log(3, "Getting unit at row=" + row + ", col=" + col + ": " + UNITS_BOARD[row][col]);
 		return UNITS_BOARD[row][col];
+	}
+	
+	/**
+	 * Returns true if there are no units on the 8 tiles surrounding the given tile coordinates.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static boolean spaceClearAroundTile(int x, int y) {
+		int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
+		for (int[] dir : directions) {
+			int newX = x + dir[0];
+			int newY = y + dir[1];
+			if (newX >= 0 && newX < UNITS_BOARD.length && newY >= 0 && newY < UNITS_BOARD[0].length) {
+				if (UNITS_BOARD[newX][newY] != null) {
+					return false; // Found a unit in an adjacent tile
+				}
+			}
+		}
+
+		return true; // No adjacent units found
 	}
 }

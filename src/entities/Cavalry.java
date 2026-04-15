@@ -2,8 +2,8 @@ package entities;
 
 public class Cavalry extends Unit {
 
-    public Cavalry(int PID, String kingdom, int x, int y) {
-        super(PID, kingdom, "cavalry.png", x, y);
+    public Cavalry(int PID, int UID, String kingdom, int x, int y) {
+        super(PID, UID, kingdom, "cavalry.png", x, y);
         this.maxMovement = 3;
         this.health = 10;
         this.attackDamage = 3;

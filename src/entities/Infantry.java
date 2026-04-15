@@ -1,8 +1,8 @@
 package entities;
 
 public class Infantry extends Unit {
-    public Infantry(int PID, String kingdom, int x, int y) {
-        super(PID, kingdom, "infantry.png", x, y);
+    public Infantry(int PID, int UID, String kingdom, int x, int y) {
+        super(PID, UID, kingdom, "infantry.png", x, y);
         this.maxMovement = 3;
         this.health = 10;
         this.attackDamage = 3;

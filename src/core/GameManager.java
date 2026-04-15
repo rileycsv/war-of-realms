@@ -163,11 +163,16 @@ public class GameManager {
 	public static int[] getPositionOfUnit(Unit unit) {
 		for(int i = 0; i < Board.getBoard().length; i++) {
 			for(int j = 0; j < Board.getBoard()[0].length; j++) {
-				if(Board.getUnitAtTile(i, j) == unit) {
+				Unit comp = Board.getUnitAtTile(i, j);
+				if(comp == null) {
+					continue; // Skip empty tiles
+				}
+				if(comp.getUnitID() == unit.getUnitID()) {
 					return new int[] {i, j};
 				}
 			}
 		}
-		return null;
+		Debug.log(2, "Warning: Unit not found on board in GameManager.getPositionOfUnit. Returning invalid position.");
+		return new int[] {-1, -1}; // Return an invalid position if the unit is not found
 	}
 }
