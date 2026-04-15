@@ -3,8 +3,13 @@ package entities;
 public class Cavalry extends Unit {
 
     public Cavalry(int PID, String kingdom, int x, int y) {
-        super(PID, kingdom, x, y);
-        //TODO Auto-generated constructor stub
+        super(PID, kingdom, "cavalry.png", x, y);
+        this.maxMovement = 3;
+        this.health = 10;
+        this.attackDamage = 3;
+        this.attackRange = 1;
+        this.currentHealth = health;
+        this.currentMovement = maxMovement;
     }
 
     @Override

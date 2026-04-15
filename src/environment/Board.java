@@ -94,28 +94,17 @@ public class Board {
 			},
 			{
 					// Hard - dense terrain, narrow passages, dual river channels (20x11)
-					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm',
-							'g' },
-					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm',
-							'g' },
-					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
-							'g' },
-					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g',
-							'g' },
-					{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g',
-							'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
-							'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g',
-							'g' },
-					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g',
-							'g' },
-					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
-							'g' },
-					{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm',
-							'm' },
-					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
-							'g' }
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm', 'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'g', 'r', 'r', 'r', 'g', 'g', 'g', 'm', 'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'm', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'r', 'g', 'r', 'g', 'm', 'g', 'g', 'g' },
+					{ 'g', 'g', 'm', 'm', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'r', 'g', 'r', 'r', 'r', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'm', 'm', 'm', 'm', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g' },
+					{ 'g', 'm', 'g', 'g', 'g', 'r', 'r', 'r', 'r', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'g', 'g', 'g' },
+					{ 'g', 'm', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'g' },
+					{ 'g', 'g', 'm', 'g', 'g', 'g', 'g', 'g', 'r', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'm', 'm' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' }
 			},
 			{
 					// Two player, river divide
@@ -127,26 +116,16 @@ public class Board {
 			},
 			{
 					// DEBUG map
-					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
-							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g',
-							'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
-					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g',
-							'v', 'g', 'v', 'g', 'g', 'g', 'g', 'g' },
-					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g',
-							'v', 'g', 'v', 'g', 'v', 'v', 'v', 'g' },
-					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g',
-							'v', 'g', 'v', 'g', 'g', 'g', 'v', 'g' },
-					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'g', 'v', 'v',
-							'g', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
-							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g',
-							'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
-					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
-							'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' },
-					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
-							'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' }
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'v', 'v', 'v', 'g' },
+					{ 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'v', 'g', 'v', 'g', 'g', 'g', 'v', 'g' },
+					{ 'g', 'v', 'v', 'v', 'g', 'g', 'v', 'v', 'v', 'v', 'g', 'v', 'v', 'v', 'g', 'g', 'g', 'v', 'v', 'g', 'g', 'g', 'v', 'v', 'v', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g' },
+					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' },
+					{ 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' }
 			}
 	};
 
@@ -204,6 +183,10 @@ public class Board {
 		// Initialize the canvas with the width and height of the board
 		canvas = new Canvas(CANVAS_W, CANVAS_H);
 		canvas.setFocusTraversable(true);
+		
+		if (UNITS_BOARD == null) {
+			setActiveBoard(CURRENT_BOARD); 
+		}
 
 		StackPane root = new StackPane(canvas);
 		Button endTurnButton = new Button("End Turn");
@@ -253,19 +236,16 @@ public class Board {
 
 			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
 			
-			// During setup phase, clicking on a tile will place your units around that tile
 			if (GameManager.isSetupTurn() && unitAtTile == null) {
-				Debug.log(2, "Placing units for player " + GameManager.getActivePlayerID() + " at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
 				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
-					if (unit == null) continue;
-					
+					if (unit == null) { continue; }
 					int r = unit.getX(), c = unit.getY();
 					if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
 						UNITS_BOARD[r][c] = unit;
 					}
 				}
 				GameManager.endTurn();
-				render(); // <--- FIX: Force the canvas to redraw with the new units
+				render();
 				return;
 			}
 
@@ -436,22 +416,38 @@ public class Board {
 			}
 		}
 
-		// Painter's algorithm: draw tile, then its highlight, then its unit —
-		// all at the same diagonal depth so later diagonals correctly overlap earlier
-		// ones.
-		for (int diag = 0; diag < rows + cols - 1; diag++) {
-			int rMin = Math.max(0, diag - (cols - 1));
-			int rMax = Math.min(diag, rows - 1);
-			for (int r = rMin; r <= rMax; r++) {
-				int c = diag - r;
-				drawTile(gc, r, c);
-				drawTileHighlight(gc, r, c, moveHighlight, attackHighlight, selected);
-				Unit unitHere = getUnitAtTile(r, c);
-				if (unitHere != null) {
-					drawUnit(gc, unitHere);
-				}
-			}
-		}
+		// Painter's algorithm: draw diagonal by diagonal (back to front)
+        // Painter's algorithm: 
+        // We run the loop one extra time (diag < rows + cols) to catch the units on the final diagonal.
+        for (int diag = 0; diag < rows + cols; diag++) {
+            
+            // Draw tiles and highlights for the CURRENT diagonal
+            if (diag < rows + cols - 1) {
+                int rMin = Math.max(0, diag - (cols - 1));
+                int rMax = Math.min(diag, rows - 1);
+                for (int r = rMin; r <= rMax; r++) {
+                    int c = diag - r;
+                    drawTile(gc, r, c);
+                    drawTileHighlight(gc, r, c, moveHighlight, attackHighlight, selected);
+                }
+            }
+
+            // Draw units for the PREVIOUS diagonal (diag - 1)
+            // This forces the unit to render AFTER the adjacent forward tiles, 
+            // but BEFORE the tile at (r+1, c+1)
+            int unitDiag = diag - 1;
+            if (unitDiag >= 0) {
+                int rMinUnit = Math.max(0, unitDiag - (cols - 1));
+                int rMaxUnit = Math.min(unitDiag, rows - 1);
+                for (int r = rMinUnit; r <= rMaxUnit; r++) {
+                    int c = unitDiag - r;
+                    Unit unitHere = getUnitAtTile(r, c);
+                    if (unitHere != null) {
+                        drawUnit(gc, unitHere);
+                    }
+                }
+            }
+        }
 
 		gc.restore();
 	}
@@ -522,23 +518,30 @@ public class Board {
 	 * @param gc
 	 * @param unit
 	 */
-	public void drawUnit(GraphicsContext gc, Unit unit) {
-		double[] top = tileTopPoint(unit.getX(), unit.getY()); 
-		Image img = unit.getImage();
-		
-		if (img != null && !img.isError()) {
-			double imgW = img.getWidth();
-			double imgH = img.getHeight();
-			double drawX = top[0] - (imgW / 2.0);
-			double drawY = (top[1] + SPRITE_H) - imgH;
-			gc.drawImage(img, drawX, drawY, imgW, imgH);
-		} else {
-			// FIX: Fallback visualization (e.g., a colored circle)
-			gc.setFill(Color.CRIMSON);
-			double radius = 10.0;
-			gc.fillOval(top[0] - radius, top[1] - radius, radius * 2, radius * 2);
-		}
-	}
+	/**
+     * Draws a unit on top of the tile, handling sprite alignment based on the
+     * tile's top vertex and the unit sprite's dimensions.
+     */
+    public void drawUnit(GraphicsContext gc, Unit unit) {
+        double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
+        Image img = unit.getImage();
+
+        if (img != null) {
+            double imgW = img.getWidth();
+            double imgH = img.getHeight();
+            
+            // The number of pixels to nudge the unit UP. 
+            // Increase this to move the unit higher, decrease to move it lower.
+            double UNIT_Y_OFFSET = 8.0; 
+            
+            double drawX = top[0] - (imgW / 2.0);
+            
+            // Subtracting the offset moves the sprite UP in JavaFX
+            double drawY = (top[1] + SPRITE_H) - imgH - UNIT_Y_OFFSET; 
+            
+            gc.drawImage(img, drawX, drawY, imgW, imgH);
+        }
+    }
 
 	/**
 	 * Draws a semi-transparent overlay on a tile to indicate move/attack range

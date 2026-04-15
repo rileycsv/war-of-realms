@@ -15,7 +15,7 @@ import utils.Debug;
 public abstract class Unit {
 	// The ID of the player that owns the unit
 	protected int PLAYER_ID = -1; 
-	protected String UNIT_TYPE = "debug.png";
+	protected String UNIT_TYPE;
 	private Image sprite;
 	private String kingdom = "debug";
 
@@ -33,25 +33,18 @@ public abstract class Unit {
 	protected int[] pos = {-1, -1}; // {row, col}
 
 	protected int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
-
-	public Unit(int PID, String kingdom, int x, int y) {
+	
+	// Update the constructor to require the unitType
+	public Unit(int PID, String kingdom, String unitType, int x, int y) {
 		this.PLAYER_ID = PID;
 		this.kingdom = kingdom;
+		this.UNIT_TYPE = unitType; 
+
 		this.pos[0] = x;
 		this.pos[1] = y;
 
-		// FIX: Safely load the resource URI
-		try {
-			String path = getSpritePath();
-			java.net.URL resource = getClass().getResource(path);
-			if (resource != null) {
-				sprite = new Image(resource.toExternalForm());
-			} else {
-				Debug.log(1, "Could not find sprite: " + path);
-			}
-		} catch (Exception e) {
-			System.err.println("Failed to load unit sprite.");
-		}
+		// Now it loads the correct image instead of debug.png
+		sprite = new Image(getSpritePath()); 
 	}
 
 	public int getPlayerID() {
@@ -80,8 +73,7 @@ public abstract class Unit {
 	 * @return The file path string for the sprite image.
 	 */
 	public String getSpritePath() {
-
-		return String.format("/assets/kingdoms/%s/%s", kingdom.toLowerCase(), UNIT_TYPE);
+		return String.format("file:assets/kingdoms/%s/%s", kingdom.toLowerCase(), UNIT_TYPE);
 	}
 
 	public Image getImage() {
