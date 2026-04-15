@@ -8,15 +8,14 @@ public class Cavalry extends Unit {
     }
 
     @Override
-    public boolean[][] canMoveTo(int row, int col) {
+    public boolean[][] canMoveTo() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'canMoveTo'");
     }
 
     @Override
-    public boolean[][] canAttack(int row, int col) {
+    public boolean[][] canAttack() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'canAttack'");
     }
-    
 }

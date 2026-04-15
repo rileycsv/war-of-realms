@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.Arrays;
+
+import environment.Board;
 import utils.Debug;
 
 public class Kingdoms {
@@ -33,14 +36,17 @@ public class Kingdoms {
             {-1,  1}, {0,  1}, {1,  1}   // bottom
         };
         
-        Unit[] units = new Unit[8];
+        int total = Arrays.stream(unitCounts).sum();
+        Unit[] units = new Unit[total];
         int posIndex = 0;
         
         // Loop through the unit counts and instantiate them at the correct positions
         for (int type = 0; type < unitCounts.length; type++) {
             for (int i = 0; i < unitCounts[type]; i++) {
-                int x = cPos[0] + positions[posIndex][0];
-                int y = cPos[1] + positions[posIndex][1];
+                int rows = Board.getBoard().length;
+                int cols = Board.getBoard()[0].length;
+                int x = Math.max(0, Math.min(rows - 1, cPos[0] + positions[posIndex][0]));
+                int y = Math.max(0, Math.min(cols - 1, cPos[1] + positions[posIndex][1]));
                 
                 units[posIndex] = switch (type) {
                     case 0 -> new Infantry(playerID, kingdom, x, y);

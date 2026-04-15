@@ -9,7 +9,6 @@ public class startGameController {
 	@FXML
 	private void startGame(ActionEvent event) {
 		GameManager.startGame();
-		GameManager.startGame();
 		ScreenFlows.show(FxStages.stage(event), 1);
 	}
 }

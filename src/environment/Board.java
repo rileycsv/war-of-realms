@@ -252,12 +252,35 @@ public class Board {
 			}
 
 			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
+			
+			// During setup phase, clicking on a tile will place your units around that tile
+			if (GameManager.isSetupTurn() && unitAtTile == null) {
+				Debug.log(2, "Placing units for player " + GameManager.getActivePlayerID() + " at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
+				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
+					if (unit == null) continue;
+					
+					int r = unit.getX(), c = unit.getY();
+					if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
+						UNITS_BOARD[r][c] = unit;
+					}
+				}
+				GameManager.endTurn();
+				render(); // <--- FIX: Force the canvas to redraw with the new units
+				return;
+			}
 
 			// During setup phase, clicking on a tile will place your units around that tile
 			if (GameManager.isSetupTurn() && unitAtTile == null) {
 				Debug.log(2, "Placing units for player " + GameManager.getActivePlayerID() + " at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
 				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
-					UNITS_BOARD[clickedTile[0]][clickedTile[1]] = unit;
+					if (unit == null) {
+						continue;
+					}
+					int r = unit.getX(), c = unit.getY();
+					if (r >= 0 && r < UNITS_BOARD.length
+							&& c >= 0 && c < UNITS_BOARD[0].length) {
+						UNITS_BOARD[r][c] = unit;
+					}
 				}
 				GameManager.endTurn();
 				return;
@@ -500,15 +523,20 @@ public class Board {
 	 * @param unit
 	 */
 	public void drawUnit(GraphicsContext gc, Unit unit) {
-		double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
+		double[] top = tileTopPoint(unit.getX(), unit.getY()); 
 		Image img = unit.getImage();
-
-		if (img != null) {
+		
+		if (img != null && !img.isError()) {
 			double imgW = img.getWidth();
 			double imgH = img.getHeight();
 			double drawX = top[0] - (imgW / 2.0);
 			double drawY = (top[1] + SPRITE_H) - imgH;
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
+		} else {
+			// FIX: Fallback visualization (e.g., a colored circle)
+			gc.setFill(Color.CRIMSON);
+			double radius = 10.0;
+			gc.fillOval(top[0] - radius, top[1] - radius, radius * 2, radius * 2);
 		}
 	}
 

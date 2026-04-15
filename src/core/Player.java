@@ -30,10 +30,11 @@ public class Player {
 	}
 	
 	public void endTurn() {
-		// Reset movement for all units at the end of the turn
-		for (Unit unit : Board.getUnitsBoard()[playerID]) {
-			if (unit != null) {
-				unit.endTurn();
+		for (Unit[] row : Board.getUnitsBoard()) {
+			for (Unit unit : row) {
+				if (unit != null && unit.getPlayerID() == playerID) {
+					unit.endTurn();
+				}
 			}
 		}
 	}
