@@ -223,7 +223,7 @@ public class Board {
 			double[] world = screenToWorld(e.getX(), e.getY());
 			int[] clickedTile = canvasToTile(world[0], world[1]);
 
-			if (GameManager.isSetupTurn()) {
+			if (!GameManager.isSetupTurn()) {
 				centerCameraOnTile(clickedTile[0], clickedTile[1]);
 			}
 

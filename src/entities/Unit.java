@@ -52,11 +52,28 @@ public abstract class Unit {
 	}
 
 	public int getHealth() { return this.health; }
-	public int getX() { return this.pos[0]; }
-	public int getY() { return this.pos[1]; }
-
+	
+	/**
+	 * Returns the x coordinate of a unit
+	 */
+	public int getX() { 
+		return getPos()[0]; 
+	}
+	/**
+	 * Returns the y coordinate of a unit
+	 * @return
+	 */
+	public int getY() { 
+		return getPos()[1]; 
+	}
+	
+	/**
+	 * Searches the board for this unit and returns its current position
+	 * @return
+	 */
 	public int[] getPos() {
-		return this.pos;
+		Debug.log(3, String.format("Unit.getPos() called for %s at (%d,%d)", UNIT_TYPE, pos[0], pos[1]));
+		return GameManager.getPositionOfUnit(this);
 	}
 
 	public void moveTo(int row, int col) {

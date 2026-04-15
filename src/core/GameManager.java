@@ -151,4 +151,21 @@ public class GameManager {
     public static Player getActivePlayer() {
         return players[activePlayerID];
     }
+	
+	/**
+	 * Searches the board for the specified unit and returns its current position as an array [row, col].
+	 * Returns null if the unit is not found on the board.
+	 * @param unit
+	 * @return
+	 */
+	public static int[] getPositionOfUnit(Unit unit) {
+		for(int i = 0; i < Board.getBoard().length; i++) {
+			for(int j = 0; j < Board.getBoard()[0].length; j++) {
+				if(Board.getUnitAtTile(i, j) == unit) {
+					return new int[] {i, j};
+				}
+			}
+		}
+		return null;
+	}
 }
