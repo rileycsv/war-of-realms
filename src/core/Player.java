@@ -10,8 +10,6 @@ import environment.Board;
 public class Player {
 	private String kingdom = "debug";
 	
-	private Kingdoms kingdomUnits = new Kingdoms();
-	
 	public Unit[] getUnits(int x, int y) {
 		return Kingdoms.getUnitsForKingdom(kingdom, playerID, new int[] {x, y});
 	}

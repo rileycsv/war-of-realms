@@ -103,6 +103,8 @@ public class GameManager {
 		
 		TURN_COUNT++;
 		updateActivePlayer();
+		
+		nextTurn();
 	}
 	
 	/**
