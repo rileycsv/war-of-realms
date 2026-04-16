@@ -223,47 +223,63 @@ public class Board {
 			double[] world = screenToWorld(e.getX(), e.getY());
 			int[] clickedTile = canvasToTile(world[0], world[1]);
 
-			if (!GameManager.isSetupTurn()) {
-				centerCameraOnTile(clickedTile[0], clickedTile[1]);
-			}
-
 			if (clickedTile[0] == -1 || clickedTile[1] == -1) {
-				// Clicked outside board
 				Debug.log(3, "Clicked outside of board.");
 				GameManager.clearSelection();
-				return;
-			}
-
-			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
-			
-			// Set up 
-			if (GameManager.isSetupTurn() && unitAtTile == null && spaceClearAroundTile(clickedTile[0], clickedTile[1])) {
-				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
-					if (unit == null) { continue; }
-					int r = unit.getX(), c = unit.getY();
-					if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
-						UNITS_BOARD[r][c] = unit;
-					}
-				}
-				GameManager.endTurn();
 				render();
 				return;
 			}
 
+			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
+
+			// Setup phase: unit placement only — no selection or movement allowed
+			if (GameManager.isSetupTurn()) {
+				if (unitAtTile == null && spaceClearAroundTile(clickedTile[0], clickedTile[1])) {
+					for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
+						if (unit == null) continue;
+						int r = unit.getX(), c = unit.getY();
+						if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
+							UNITS_BOARD[r][c] = unit;
+						}
+					}
+					GameManager.endTurn();
+				}
+				render();
+				return; // Never fall through to gameplay logic during setup
+			}
+
+			// Gameplay phase
+			centerCameraOnTile(clickedTile[0], clickedTile[1]);
+
+			Unit selected = GameManager.getSelectedUnit();
 			if (unitAtTile == null) {
-				Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
-				GameManager.clearSelection();
-			} else {
-				if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
+				// Clicked empty tile: move selected unit there if it can reach it
+				boolean canMove = false;
+				try {
+					canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
+				} catch (UnsupportedOperationException ex) {
+					Debug.log(2, "Unimplimented canMoveToTile called for unit " + selected);
+					
+				}
 
-					GameManager.setSelectedUnit(unitAtTile);
-				} else if ((unitAtTile.canAttackTile(clickedTile[0], clickedTile[1])) || unitAtTile.canMoveToTile(clickedTile[0], clickedTile[1])) {
-
+				if (canMove) {
+					UNITS_BOARD[selected.getX()][selected.getY()] = null;
+					selected.moveTo(clickedTile[0], clickedTile[1]);
+					UNITS_BOARD[clickedTile[0]][clickedTile[1]] = selected;
+					selected.spendAllMovement();
+					GameManager.clearSelection();
 				} else {
-					// Clicked on enemy, empty space, or neutral - deselect
+					Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
 					GameManager.clearSelection();
 				}
+			} else if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
+				// Clicked own unit — select it
+				GameManager.setSelectedUnit(unitAtTile);
+			} else {
+				// Clicked enemy unit — deselect (combat not yet implemented)
+				GameManager.clearSelection();
 			}
+			render();
 		});
 
 		// When the canvas is scrolled, zoom logic and rerender
@@ -389,13 +405,19 @@ public class Board {
 		boolean[][] moveHighlight = new boolean[rows][cols];
 		boolean[][] attackHighlight = new boolean[rows][cols];
 
-		Unit selected = GameManager.getSelectedUnit(); // You'll need to add this to GameManager
-		if (selected != null) {
-			for (int r = 0; r < rows; r++) {
-				for (int c = 0; c < cols; c++) {
-					moveHighlight[r][c] = selected.canMoveToTile(r, c);
-					attackHighlight[r][c] = selected.canAttackTile(r, c);
+		Unit selected = GameManager.getSelectedUnit();
+		if (selected != null && !GameManager.isSetupTurn()) {
+			try {
+				boolean[][] movMap = selected.canMoveTo();
+				boolean[][] atkMap = selected.canAttack();
+				for (int r = 0; r < rows; r++) {
+					for (int c = 0; c < cols; c++) {
+						moveHighlight[r][c] = r < movMap.length && c < movMap[r].length && movMap[r][c];
+						attackHighlight[r][c] = r < atkMap.length && c < atkMap[r].length && atkMap[r][c];
+					}
 				}
+			} catch (UnsupportedOperationException ignored) {
+				// Unit subclass has not yet implemented canMoveTo/canAttack — render without highlights
 			}
 		}
 
@@ -493,14 +515,6 @@ public class Board {
 		}
 	}
 
-	/**
-	 * Draws a unit on top of the tile, handling sprite alignment based on the
-	 * tile's top vertex
-	 * and the unit sprite's dimensions.
-	 * 
-	 * @param gc
-	 * @param unit
-	 */
 	/**
      * Draws a unit on top of the tile, handling sprite alignment based on the
      * tile's top vertex and the unit sprite's dimensions.

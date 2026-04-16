@@ -12,12 +12,12 @@ public class Debug {
 	private static boolean enabled = true;
 	private static int priority = -1;
 	private static String lastMessage = "";
-	
+
 	public static void setDebug(boolean state) {
 		print(3, state ? "Debug enabled" : "Debug disabled");
 		enabled = state;
 	}
-	
+
 	/**
      * Enables or disables debugging and sets the minimum priority level.
      * @param state true to enable, false to disable.
@@ -28,26 +28,26 @@ public class Debug {
 		enabled = state;
 		priority = level;
 	}
-	
+
 	public static void setDebugPriority(int level) {
 		print(3, "Debug level set: " + level);
 		priority = level;
 	}
-	
+
 	public static void disable() {
 		print(3, "Debug disabled");
 		enabled = false;
 	}
-	
+
 	public static void enable() {
 		print(3, "Debug enabled");
 		enabled = true;
 	}
-	
+
 	public static boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	public static void log(String... args) {
 		if (enabled) {
 			if (args[0].equals(lastMessage)) {
@@ -60,18 +60,13 @@ public class Debug {
 			}
 		}
 	}
-	
-	public static void log(int l, String...args ) {
-		if (priority >= l) {
-			if (args[0].equals(lastMessage)) {
-				System.out.print(".");
-				return;
-			}
-			lastMessage = args[0];
+
+	public static void log(int l, String... args) {
+		if (enabled && priority >= l) {
 			log(args);
 		}
 	}
-	
+
 	public static void print(String... args) {
 		if (enabled) {
 			if (args[0].equals(lastMessage)) {
@@ -84,18 +79,13 @@ public class Debug {
 			}
 		}
 	}
-	
+
 	public static void print(int l, String... args) {
-		if (priority >= l) {
-			if (args[0].equals(lastMessage)) {
-				System.out.print(".");
-				return;
-			}
-			lastMessage = args[0];
+		if (enabled && priority >= l) {
 			print(args);
 		}
 	}
-	
+
 	public static void println(String... args) {
 		if (enabled) {
 			if (args[0].equals(lastMessage)) {
@@ -104,46 +94,41 @@ public class Debug {
 			}
 			lastMessage = args[0];
 			for (String s : args) {
-				System.out.print(s); 
+				System.out.print(s);
 			}
 			System.out.println();
 		}
 	}
-	
-	public static void println(int l, String...args) {
-		if (priority >= l) {
-			if (args[0].equals(lastMessage)) {
-				System.out.print(".");
-				return;
-			}
-			lastMessage = args[0];
+
+	public static void println(int l, String... args) {
+		if (enabled && priority >= l) {
 			println(args);
 		}
 	}
-	
+
 	public static void printf(String formatString, Object... args) {
 		if (enabled) {
-			if (args[0].equals(lastMessage)) {
+			if (formatString.equals(lastMessage)) {
 				System.out.print(".");
 				return;
 			}
-			lastMessage = (String) args[0];
+			lastMessage = formatString;
 			System.out.printf(formatString, args);
 		}
 	}
-	
-	public static void printf(int l, String fS, Object...args) {
-		if (priority >= l) {
+
+	public static void printf(int l, String fS, Object... args) {
+		if (enabled && priority >= l) {
 			printf(fS, args);
 		}
 	}
-	
+
 	public static void error(Exception e) {
 		if (enabled) {
 			e.printStackTrace(System.err);
 		}
 	}
-	
+
 	public static void error(String... args) {
 		if (enabled) {
 			for (String s : args) {

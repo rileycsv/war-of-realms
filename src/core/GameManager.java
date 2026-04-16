@@ -103,8 +103,6 @@ public class GameManager {
 		
 		TURN_COUNT++;
 		updateActivePlayer();
-		
-		nextTurn();
 	}
 	
 	/**
@@ -140,14 +138,6 @@ public class GameManager {
 	 */
 	public static int getPlayerOfUnit(Unit unit) {
 		return unit.getPlayerID();
-	}
-
-	private static void nextTurn() {
-		if (activePlayerID < players.length - 1) {
-			activePlayerID++; // Move to the next player
-		} else {
-			activePlayerID = 0; // Loop back to the first player
-		}
 	}
 
     public static Player getActivePlayer() {

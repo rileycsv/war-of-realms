@@ -15,9 +15,7 @@ public class Player {
 	}
 	
 	private int playerID = -1;
-	
-	private int[] selectedUnitIndex = {-1, -1}; // Index of the currently selected unit in the UNITS array
-	
+
 	public Player(int ID, String kingdom) {
 		this.playerID = ID;
 		this.kingdom = kingdom;
@@ -37,7 +35,4 @@ public class Player {
 		}
 	}
 	
-	public int[] getActiveUnit() {
-		return selectedUnitIndex; 
-	}
 }
