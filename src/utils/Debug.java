@@ -11,6 +11,7 @@ package utils;
 public class Debug {
 	private static boolean enabled = true;
 	private static int priority = -1;
+	private static String lastMessage = "";
 	
 	public static void setDebug(boolean state) {
 		print(3, state ? "Debug enabled" : "Debug disabled");
@@ -49,6 +50,11 @@ public class Debug {
 	
 	public static void log(String... args) {
 		if (enabled) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			for (String s : args) {
 				System.out.println(s);
 			}
@@ -56,13 +62,23 @@ public class Debug {
 	}
 	
 	public static void log(int l, String...args ) {
-		if (priority <= l) {
+		if (priority >= l) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			log(args);
 		}
 	}
 	
 	public static void print(String... args) {
 		if (enabled) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			for (String s : args) {
 				System.out.print(s);
 			}
@@ -70,13 +86,23 @@ public class Debug {
 	}
 	
 	public static void print(int l, String... args) {
-		if (priority <= l) {
+		if (priority >= l) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			print(args);
 		}
 	}
 	
 	public static void println(String... args) {
 		if (enabled) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			for (String s : args) {
 				System.out.print(s); 
 			}
@@ -85,19 +111,29 @@ public class Debug {
 	}
 	
 	public static void println(int l, String...args) {
-		if (priority <= l) {
+		if (priority >= l) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = args[0];
 			println(args);
 		}
 	}
 	
 	public static void printf(String formatString, Object... args) {
 		if (enabled) {
+			if (args[0].equals(lastMessage)) {
+				System.out.print(".");
+				return;
+			}
+			lastMessage = (String) args[0];
 			System.out.printf(formatString, args);
 		}
 	}
 	
 	public static void printf(int l, String fS, Object...args) {
-		if (priority <= l) {
+		if (priority >= l) {
 			printf(fS, args);
 		}
 	}
