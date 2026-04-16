@@ -127,7 +127,7 @@ public class Empires
 
             case "E": // English
                 return (sr == er) || (sc == ec);
-
+                
             case "P": // Portuguese
                 return (dRow == dCol);
 

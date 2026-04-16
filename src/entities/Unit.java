@@ -35,18 +35,39 @@ public abstract class Unit {
 
 	protected int[] attacking = {-1, -1}; // {row, col} of the unit this unit is currently attacking
 	
-	// Update the constructor to require the unitType
-	public Unit(int PID, int UID, String kingdom, String unitType, int x, int y) {
+	public Unit(int PID, int UID, String kingdom, int x, int y) {
 		this.PLAYER_ID = PID;
 		this.unitID = UID;
 		this.kingdom = kingdom;
-		this.UNIT_TYPE = unitType; 
+		this.UNIT_TYPE = "../debug.png"; 
 
 		this.pos[0] = x;
 		this.pos[1] = y;
-
-		// Now it loads the correct image instead of debug.png
+		
 		sprite = new Image(getSpritePath()); 
+	}
+	
+    /**
+     * Determines what tiles a unit can move to based on its movement range.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
+	 */
+	public abstract boolean[][] canMoveTo();
+	
+	/**
+	 * Determines what tiles a unit can attack based on its attack range.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
+	 */
+	public abstract boolean[][] canAttack();
+
+	public boolean canAttackTile(int i, int j) {
+		return canAttack()[i][j];
+	}
+	public boolean canMoveToTile(int i, int j) {
+		return canMoveTo()[i][j];
 	}
 
 	public int getPlayerID() {
@@ -109,30 +130,6 @@ public abstract class Unit {
 	 */
 	public void endTurn() {
 		this.currentMovement = this.maxMovement;
-	}
-
-    /**
-	 * Determines if the unit can move to the specified grid position based on its
-	 * movement rules and the current game state.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
-	 */
-	public abstract boolean[][] canMoveTo();
-	/**
-	 * Determines if the unit can attack a target at the specified grid position based on its attack rules and the current game state.
-	 * This typically checks if the target is within the unit's attack range and if there are any obstacles in the way.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each tile represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
-	 */
-	public abstract boolean[][] canAttack();
-
-	public boolean canAttackTile(int i, int j) {
-		return canAttack()[i][j];
-	}
-	public boolean canMoveToTile(int i, int j) {
-		return canMoveTo()[i][j];
 	}
 	
 	@Override
