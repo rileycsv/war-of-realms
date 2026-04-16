@@ -1,5 +1,7 @@
 package entities;
 
+import utils.DatabaseIO;
+
 public class Archer extends Unit {
 
     public Archer(int PID, int UID, String kingdom, int x, int y) {

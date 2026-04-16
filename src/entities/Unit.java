@@ -47,14 +47,18 @@ public abstract class Unit {
 	}
 
     /**
-     * Returns a boolean[][] (board-sized) where true means this unit can move to that tile.
-     * Uses BFS limited by currentMovement. Ally tiles are blocked; enemy tiles stop movement.
-     */
+     * Determines what tiles a unit can move to based on its movement range.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
+	 */
 	public abstract boolean[][] canMoveTo();
 
 	/**
-	 * Returns a boolean[][] (board-sized) where true means this unit can attack that tile.
-	 * Uses Manhattan distance limited by attackRange; only enemy-occupied tiles are flagged.
+	 * Determines what tiles a unit can attack based on its attack range.
+	 * @param row
+	 * @param col
+	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
 	 */
 	public abstract boolean[][] canAttack();
 

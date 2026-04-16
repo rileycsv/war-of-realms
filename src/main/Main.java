@@ -14,7 +14,7 @@ import javafx.scene.Scene;
 
 public class Main extends Application {
 	
-	private Stage primaryStage;
+	public static Stage primaryStage;
 	private Board board = new Board();
 	
 	@Override
@@ -38,7 +38,6 @@ public class Main extends Application {
 				primaryStage.close();
 			}
 		});
-
 	}
 	
 	/**
