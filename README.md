@@ -62,28 +62,6 @@ If you missed the popup, you can install it manually:
 
 The build will automatically compile all source files and start the game.
 
-**Other build options:**
-- `Ctrl+Shift+B` — Compile only (no launch)
-- `Ctrl+Shift+P` → "Tasks: Run Task" → "Run War of Realms" — Compile and run
-
----
-
-## How to Play
-
-### Setup Phase
-
-When the game starts, each player takes a turn **placing their army** on the board. Click any open tile to place your units there. The game prevents you from placing units too close to the opponent's starting area.
-
-### Gameplay Phase
-
-Once both players have placed their units, the main game begins.
-
-**Selecting and moving a unit:**
-1. Click one of your units to select it (it will highlight yellow)
-2. Blue tiles show where it can move
-3. Red tiles show what it can attack
-4. Click a blue tile to move the unit there
-
 **Camera controls:**
 
 | Action | Key / Input |
