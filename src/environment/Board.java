@@ -415,13 +415,11 @@ public class Board {
 					}
 				}
 			} catch (UnsupportedOperationException ignored) {
-				// Unit subclass has not yet implemented canMoveTo/canAttack — render without highlights
+				Debug.log(2, "Unimplimented canMoveTo/canAttack called for unit " + selected);
 			}
 		}
 
 		// Painter's algorithm: draw diagonal by diagonal (back to front)
-        // Painter's algorithm: 
-        // We run the loop one extra time (diag < rows + cols) to catch the units on the final diagonal.
         for (int diag = 0; diag < rows + cols; diag++) {
             
             // Draw tiles and highlights for the CURRENT diagonal
