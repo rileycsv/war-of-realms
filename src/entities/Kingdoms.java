@@ -34,7 +34,7 @@ public class Kingdoms {
         // Define the 3x3 grid offsets around center point (cPos) for unit placement
         int[][] positions = {
             {-1, -1}, {0, -1}, {1, -1},  // top
-            {-1,  0}, {0,  0}, {1,  0},  // middle
+            {-1,  0},          {1,  0},  // middle (skipping center)
             {-1,  1}, {0,  1}, {1,  1}   // bottom
         };
         
