@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import main.Main;
@@ -87,20 +88,20 @@ public class Board {
 	}
 
 	// Runtime state
-	private Canvas canvas;
+	private static Canvas canvas;
 
 	// Camera & mouse state
 	// Defaulting closer to the center of the specific grid layout
-	private double cameraX = ORIGIN_X;
-	private double cameraY = ORIGIN_Y + 100;
-	private double zoom = 3.5;
-	private double max_zoom = 7.0;
-	private double min_zoom = 1;
+	private static double cameraX = ORIGIN_X;
+	private static double cameraY = ORIGIN_Y + 100;
+	private static double zoom = 3.5;
+	private static double max_zoom = 7.0;
+	private static double min_zoom = 1;
 
-	private double lastMouseX = -1;
-	private double lastMouseY = -1;
-	private int hoverRow = -1;
-	private int hoverCol = -1;
+	private static double lastMouseX = -1;
+	private static double lastMouseY = -1;
+	private static int hoverRow = -1;
+	private static int hoverCol = -1;
 	
 	/**
 	 * Initializes the canvas, sets up input listeners for mouse and keyboard,
@@ -140,85 +141,10 @@ public class Board {
 			GameManager.endTurn();
 			canvas.requestFocus(); // Return focus to the canvas after clicking the button
 		});
-
-		// Get cursor position when cursor moves
-		canvas.setOnMouseMoved(e -> {
-			lastMouseX = e.getX();
-			lastMouseY = e.getY();
-			updateHover();
-		});
-
-		// When the mouse exits the canvas, don't highlight any tiles
-		canvas.setOnMouseExited(e -> {
-			lastMouseX = -1;
-			lastMouseY = -1;
-			hoverRow = -1;
-			hoverCol = -1;
-			render();
-		});
-
-		canvas.setOnMouseClicked(e -> {
-			double[] world = screenToWorld(e.getX(), e.getY());
-			int[] clickedTile = canvasToTile(world[0], world[1]);
-
-			if (clickedTile[0] == -1 || clickedTile[1] == -1) {
-				Debug.log(3, "Clicked outside of board.");
-				GameManager.clearSelection();
-				render();
-				return;
-			}
-
-			Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
-
-			// Setup phase: unit placement only — no selection or movement allowed
-			if (GameManager.isSetupTurn()) {
-				if (unitAtTile == null && spaceClearAroundTile(clickedTile[0], clickedTile[1])) {
-					for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
-						if (unit == null) continue;
-						int r = unit.getX(), c = unit.getY();
-						if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
-							UNITS_BOARD[r][c] = unit;
-						}
-					}
-					GameManager.endTurn();
-				}
-				render();
-				return; // Never fall through to gameplay logic during setup
-			}
-
-			// Gameplay phase
-			centerCameraOnTile(clickedTile[0], clickedTile[1]);
-
-			Unit selected = GameManager.getSelectedUnit();
-			if (unitAtTile == null) {
-				// Clicked empty tile: move selected unit there if it can reach it
-				boolean canMove = false;
-				try {
-					canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
-				} catch (UnsupportedOperationException ex) {
-					Debug.log(2, "Unimplimented canMoveToTile called for unit " + selected);
-					
-				}
-
-				if (canMove) {
-					UNITS_BOARD[selected.getX()][selected.getY()] = null;
-					selected.moveTo(clickedTile[0], clickedTile[1]);
-					UNITS_BOARD[clickedTile[0]][clickedTile[1]] = selected;
-					selected.spendAllMovement();
-					GameManager.clearSelection();
-				} else {
-					Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
-					GameManager.clearSelection();
-				}
-			} else if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
-				// Clicked own unit — select it
-				GameManager.setSelectedUnit(unitAtTile);
-			} else {
-				// Clicked enemy unit — deselect (combat not yet implemented)
-				GameManager.clearSelection();
-			}
-			render();
-		});
+		
+		onCanvasCursorMoved();
+		
+		canvas.setOnMouseClicked(e -> onCanvasClick(e));
 
 		// When the canvas is scrolled, zoom logic and rerender
 		canvas.setOnScroll(e -> {
@@ -272,6 +198,88 @@ public class Board {
 		canvas.requestFocus();
 		return scene;
 	}
+	
+	/**
+	 * The mouseClick handler for the canvas
+	 */
+	private static void onCanvasClick(MouseEvent e) {
+		double[] world = screenToWorld(e.getX(), e.getY());
+		int[] clickedTile = canvasToTile(world[0], world[1]);
+
+		if (clickedTile[0] == -1 || clickedTile[1] == -1) {
+			Debug.log(3, "Clicked outside of board.");
+			GameManager.clearSelection();
+			render();
+			return;
+		}
+
+		Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
+
+		// Setup phase: unit placement only — no selection or movement allowed
+		if (GameManager.isSetupTurn()) {
+			if (unitAtTile == null && spaceClearAroundTile(clickedTile[0], clickedTile[1])) {
+				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
+					if (unit == null) continue;
+					int r = unit.getX(), c = unit.getY();
+					if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
+						UNITS_BOARD[r][c] = unit;
+					}
+				}
+				GameManager.endTurn();
+			}
+			centerCameraOnTile(clickedTile[0], clickedTile[1]);
+			render();
+			return; // Never fall through to gameplay logic during setup
+		}
+
+		// Gameplay phase
+		Unit selected = GameManager.getSelectedUnit();
+		if (unitAtTile == null) {
+			// Clicked empty tile: move selected unit there if it can reach it
+			boolean canMove = false;
+			try {
+				canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
+			} catch (UnsupportedOperationException ex) {
+				Debug.log(2, "Unimplimented canMoveToTile called for unit " + selected);
+			}
+			
+			if (canMove) {
+				UNITS_BOARD[selected.getX()][selected.getY()] = null;
+				selected.moveTo(clickedTile[0], clickedTile[1]);
+				UNITS_BOARD[clickedTile[0]][clickedTile[1]] = selected;
+				selected.spendAllMovement();
+				GameManager.clearSelection();
+			} else {
+				Debug.log(2, "Clicked on empty tile at row=" + clickedTile[0] + ", col=" + clickedTile[1]);
+				GameManager.clearSelection();
+			}
+		} else if (unitAtTile.getPlayerID() == GameManager.getActivePlayerID()) {
+			// Clicked own unit — select it
+			GameManager.setSelectedUnit(unitAtTile);
+		} else {
+			// Clicked enemy unit — deselect (combat not yet implemented)
+			GameManager.clearSelection();
+		}
+		render();
+	}
+	
+	public static void onCanvasCursorMoved() {
+		// Get cursor position when cursor moves
+		canvas.setOnMouseMoved(e -> {
+			lastMouseX = e.getX();
+			lastMouseY = e.getY();
+			updateHover();
+		});
+		
+		// When the mouse exits the canvas, don't highlight any tiles
+		canvas.setOnMouseExited(e -> {
+			lastMouseX = -1;
+			lastMouseY = -1;
+			hoverRow = -1;
+			hoverCol = -1;
+			render();
+		});
+	}
 
 	// =========================================================================
 	// Camera / Coordinate Logic
@@ -285,7 +293,7 @@ public class Board {
 	 * @param cy The y position on the screen
 	 * @return An array containing [WorldX, WorldY]
 	 */
-	private double[] screenToWorld(double cx, double cy) {
+	private static double[] screenToWorld(double cx, double cy) {
 		// Perfectly mirrors the new render() translations/scaling
 		double wx = (cx - CANVAS_W / 2.0) / zoom + cameraX;
 		double wy = (cy - CANVAS_H / 2.0) / zoom + cameraY;
@@ -297,7 +305,7 @@ public class Board {
 	/**
 	 * Run when canvas is scrolled or mouse is moved to update tile highlights.
 	 */
-	private void updateHover() {
+	private static void updateHover() {
 		if (lastMouseX < 0 || lastMouseY < 0) {
 			return;
 		}
@@ -322,7 +330,7 @@ public class Board {
 	 * and draws the grid back-to-front (painter's algorithm) to prevent overlap
 	 * issues.
 	 */
-	private void render() {
+	private static void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 
 		gc.setImageSmoothing(false);
@@ -400,7 +408,7 @@ public class Board {
 	 * @param row The row of the tile
 	 * @param col The column of the tile
 	 */
-	private void drawTile(GraphicsContext gc, int row, int col) {
+	private static void drawTile(GraphicsContext gc, int row, int col) {
 		double[] top = tileTopPoint(row, col);
 
 		Image img = getTile(row, col);
@@ -455,7 +463,7 @@ public class Board {
      * Draws a unit on top of the tile, handling sprite alignment based on the
      * tile's top vertex and the unit sprite's dimensions.
      */
-    public void drawUnit(GraphicsContext gc, Unit unit) {
+    public static void drawUnit(GraphicsContext gc, Unit unit) {
         double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
         Image img = unit.getImage();
 		
@@ -480,7 +488,7 @@ public class Board {
 	 * Draws a semi-transparent overlay on a tile to indicate move/attack range
 	 * or the currently selected unit's position.
 	 */
-	private void drawTileHighlight(GraphicsContext gc, int row, int col,
+	private static void drawTileHighlight(GraphicsContext gc, int row, int col,
 			boolean[][] moveHL, boolean[][] attackHL,
 			Unit selected) {
 		// Determine what color to overlay, if any
@@ -532,24 +540,7 @@ public class Board {
 	 * @return The image of the tile
 	 */
 	private static Image getTile(int row, int col) {
-		Tile tile = null;
-		switch (getBoard()[row][col]) {
-			case 'g':
-				tile = GRASS_TILE;
-				break;
-			case 'f':
-				tile = FOREST_TILE;
-				break;
-			case 'm':
-				tile = MOUNTAIN_TILE;
-				break;
-			case 'r':
-				tile = RIVER_TILE;
-				break;
-			case 'v':
-				tile = VOID_TILE;
-				break;
-		}
+		Tile tile = getTileObject(row, col);
 		// Now it just calculates the Voronoi noise and returns an already-loaded Image!
 		return tile != null ? tile.getImage(row, col) : null;
 	}
@@ -567,6 +558,23 @@ public class Board {
 			default -> Color.GRAY;
 		};
 	}
+	
+	/**
+	 * Returns the tile object for a given tile coordinate.
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public static Tile getTileObject(int row, int col) {
+		return switch (getBoard()[row][col]) {
+			case 'g' -> GRASS_TILE;
+			case 'f' -> FOREST_TILE;
+			case 'm' -> MOUNTAIN_TILE;
+			case 'r' -> RIVER_TILE;
+			case 'v' -> VOID_TILE;
+			default -> null;
+		};
+	}
 
 	/**
 	 * Returns the cost for a given tile
@@ -576,24 +584,7 @@ public class Board {
 	 * @return The cost of the tile
 	 */
 	private static int getTileCost(int row, int col) {
-		Tile tile = null;
-		switch (getBoard()[row][col]) {
-			case 'g':
-				tile = GRASS_TILE;
-				break;
-			case 'f':
-				tile = FOREST_TILE;
-				break;
-			case 'm':
-				tile = MOUNTAIN_TILE;
-				break;
-			case 'r':
-				tile = RIVER_TILE;
-				break;
-			case 'v':
-				tile = VOID_TILE;
-				break;
-		}
+		Tile tile = getTileObject(row, col);
 		return tile != null ? tile.getCost() : 0;
 	}
 
@@ -601,7 +592,7 @@ public class Board {
 	 * Returns the topmost point of a tile, used for positioning tile sprites in the
 	 * grid
 	 */
-	public double[] tileTopPoint(int row, int col) {
+	public static double[] tileTopPoint(int row, int col) {
 		double x = ORIGIN_X + (col - row) * (TILE_W / 2.0);
 		double y = ORIGIN_Y + (col + row) * (FACE_H / 2.0);
 		return new double[] { x, y };
@@ -614,7 +605,7 @@ public class Board {
 	 * @param worldY The absolute y position in the world
 	 * @return An array containing [row, col], or [-1, -1] if out of bounds.
 	 */
-	public int[] canvasToTile(double worldX, double worldY) {
+	public static int[] canvasToTile(double worldX, double worldY) {
 		double hw = TILE_W / 2.0;
 		double hh = FACE_H / 2.0;
 
@@ -663,7 +654,7 @@ public class Board {
 	 * @param x The row coordinate
 	 * @param y The col coordinate
 	 */
-	private void centerCameraOnTile(int x, int y) {
+	private static void centerCameraOnTile(int x, int y) {
 		double[] centerPt = tileTopPoint(x, y);
 
 		cameraX = centerPt[0];
