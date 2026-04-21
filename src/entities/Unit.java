@@ -45,7 +45,7 @@ public abstract class Unit {
 		// Sprite is NOT loaded here — UNIT_TYPE is set by the subclass constructor
 		// after super() returns, so loading here would always use "../debug.png".
 	}
-
+	
     /**
      * Determines what tiles a unit can move to based on its movement range.
 	 * @param row
@@ -53,7 +53,7 @@ public abstract class Unit {
 	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
 	 */
 	public abstract boolean[][] canMoveTo();
-
+	
 	/**
 	 * Determines what tiles a unit can attack based on its attack range.
 	 * @param row
@@ -65,26 +65,26 @@ public abstract class Unit {
 	public boolean canAttackTile(int i, int j) {
 		return canAttackTile(i, j);
 	}
-
+	
 	public boolean canMoveToTile(int i, int j) {
 		return canMoveToTile(i, j);
 	}
-
+	
 	/** Spends all remaining movement points (called after the unit moves). */
 	public void spendAllMovement() {
 		this.currentMovement = 0;
 	}
-
+	
 	public int getPlayerID() {
 		return this.PLAYER_ID;
 	}
-
+	
 	public int getUnitID() {
 		return this.unitID;
 	}
-
-	public int getHealth() { return this.health; }
-
+	
+	public int getHealth() { return this.currentHealth; }
+	public int getMaxHealth() { return this.health; }
 	/**
 	 * Returns the row (x) coordinate of the unit.
 	 */

@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import main.Main;
 import javafx.scene.effect.ColorAdjust;
 import javafx.geometry.Pos;
@@ -479,7 +480,26 @@ public class Board {
             
             // Subtracting the offset moves the sprite UP in JavaFX
             double drawY = (top[1] + SPRITE_H) - imgH - UNIT_Y_OFFSET; 
-            
+			
+			double healthRatio = (double) unit.getHealth() / unit.getMaxHealth();
+			
+			double healthBarWidth = 8;
+			
+			double healthBarOffsetX = (imgW - healthBarWidth) / 2.0;
+			
+			gc.setFill(Color.rgb(194, 192, 192));
+			gc.fillRect(drawX + healthBarOffsetX - .25, drawY - 2, healthBarWidth + 0.5, 1.5);
+			
+			if (healthRatio >= 0.70) {
+				gc.setFill(Color.rgb(16, 137, 16));
+			} else if (healthRatio > 0.70 && healthRatio <= 0.25) {
+				gc.setFill(Color.rgb(255, 247, 3));
+			} else {
+				gc.setFill(Color.rgb(192, 45, 45));
+			}
+			
+			gc.fillRect(drawX + healthBarOffsetX, drawY - 1.75, healthRatio * healthBarWidth, 1);
+			
             gc.drawImage(img, drawX, drawY, imgW, imgH);
         }
     }
@@ -488,9 +508,7 @@ public class Board {
 	 * Draws a semi-transparent overlay on a tile to indicate move/attack range
 	 * or the currently selected unit's position.
 	 */
-	private static void drawTileHighlight(GraphicsContext gc, int row, int col,
-			boolean[][] moveHL, boolean[][] attackHL,
-			Unit selected) {
+	private static void drawTileHighlight(GraphicsContext gc, int row, int col, boolean[][] moveHL, boolean[][] attackHL, Unit selected) {
 		// Determine what color to overlay, if any
 		Color overlayColor = null;
 
