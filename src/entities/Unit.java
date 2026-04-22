@@ -56,22 +56,6 @@ public abstract class Unit {
 			this.sprite = new Image("file:assets/units/grave.png");
 		}
 	}
-	
-    /**
-     * Determines what tiles a unit can move to based on its movement range.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
-	 */
-	public abstract boolean[][] canMoveTo();
-	
-	/**
-	 * Determines what tiles a unit can attack based on its attack range.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
-	 */
-	public abstract boolean[][] canAttack();
 
 	public boolean canAttackTile(int i, int j) {
 		return canAttack()[i][j];
@@ -153,4 +137,103 @@ public abstract class Unit {
 	public String toString() {
 		return String.format("Unit{type: %s, playerID: %d, pos: (%d,%d), health: %d/%d}%n", UNIT_TYPE, PLAYER_ID, pos[0], pos[1], currentHealth, health);
 	}
+	
+    public boolean[][] canMoveTo() {
+        char[][] board = Board.getBoard();
+        int[][] boardCosts = Board.getBoardCosts();
+        int rows = board.length;
+        int cols = board[0].length;
+        
+        boolean[][] canMove = new boolean[rows][cols];
+        boolean[][] visited = new boolean[rows][cols];
+        
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{pos[0], pos[1], currentMovement});
+        visited[pos[0]][pos[1]] = true;
+        canMove[pos[0]][pos[1]] = true;
+        
+        // 4-directional movement: up, down, left, right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int row = current[0];
+            int col = current[1];
+            int remainingMovement = current[2];
+            
+            for (int[] dir : directions) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
+                
+                // Check bounds
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+                    // Check if already visited
+                    if (!visited[newRow][newCol]) {
+                        int tileCost = boardCosts[newRow][newCol];
+                        
+                        // Check if we have enough movement to reach this tile
+                        if (remainingMovement >= tileCost) {
+                            visited[newRow][newCol] = true;
+                            canMove[newRow][newCol] = true;
+                            queue.add(new int[]{newRow, newCol, remainingMovement - tileCost});
+                        }
+                    }
+                }
+            }
+        }
+        
+        return canMove;
+    }
+    
+    /**
+	 * Determines what tiles a unit can attack based on its attack range.
+	 * Uses a BFS flood fill algorithm to explore tiles within attack range.
+	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
+	 */
+    public boolean[][] canAttack() {
+        char[][] board = Board.getBoard();
+        int rows = board.length;
+        int cols = board[0].length;
+        
+        boolean[][] canAttackTile = new boolean[rows][cols];
+        boolean[][] visited = new boolean[rows][cols];
+        
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{pos[0], pos[1], 0});
+        visited[pos[0]][pos[1]] = true;
+        
+        // 4-directional movement: up, down, left, right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int row = current[0];
+            int col = current[1];
+            int distance = current[2];
+            
+            // Mark current tile as attackable if within range
+            if (distance <= attackRange) {
+                canAttackTile[row][col] = true;
+            }
+            
+            // Continue exploring if we haven't reached max range
+            if (distance < attackRange) {
+                for (int[] dir : directions) {
+                    int newRow = row + dir[0];
+                    int newCol = col + dir[1];
+                    
+                    // Check bounds
+                    if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+                        // Check if already visited
+                        if (!visited[newRow][newCol]) {
+                            visited[newRow][newCol] = true;
+                            queue.add(new int[]{newRow, newCol, distance + 1});
+                        }
+                    }
+                }
+            }
+        }
+        
+        return canAttackTile;
+    }
 }

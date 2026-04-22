@@ -1,39 +1,17 @@
 package entities;
 
+import utils.DatabaseIO;
+
 public class Pikeman extends Unit {
 
     public Pikeman(int PID, int UID, String kingdom, int x, int y) {
         super(PID, UID, kingdom, x, y);
         super.UNIT_TYPE = "pikeman.png";
-        this.maxMovement = 3;
-        this.health = 10;
+        this.maxMovement = DatabaseIO.getValue("Pikemen", "Movement_Speed");
+        this.health = DatabaseIO.getValue("Pikemen", "UnitHealth");
         this.attackDamage = 3;
-        this.attackRange = 1;
+        this.attackRange = DatabaseIO.getValue("Pikemen", "Attack_Range");
         this.currentHealth = health;
         this.currentMovement = maxMovement;
-    }
-    
-    /**
-     * Determines what tiles a unit can move to based on its movement range.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
-	 */
-    @Override
-    public boolean[][] canMoveTo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canMoveTo'");
-    }
-    
-    /**
-	 * Determines what tiles a unit can attack based on its attack range.
-	 * @param row
-	 * @param col
-	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
-	 */
-    @Override
-    public boolean[][] canAttack() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canAttack'");
     }
 }

@@ -7,6 +7,7 @@ import environment.Board;
 import utils.Debug;
 
 public class Kingdoms {
+    private static int unitID = 0;
     /**
      * Returns an array of Units corresponding to the specified kingdom, player ID, and center starting position.
      * @param kingdom
@@ -15,7 +16,7 @@ public class Kingdoms {
      * @return
      */
     public static Unit[] getUnitsForKingdom(String kingdom, int playerID, int[] cPos) {
-        Random r = new Random();
+        
         // Unit counts defined as: {Infantry, Archer, Cavalry, Pikeman}
         int[] unitCounts = switch (kingdom) {
             case "Hussites"   -> new int[] {5, 1, 1, 1};
@@ -50,16 +51,16 @@ public class Kingdoms {
                 int x = Math.max(0, Math.min(rows - 1, cPos[0] + positions[posIndex][0]));
                 int y = Math.max(0, Math.min(cols - 1, cPos[1] + positions[posIndex][1]));
                 
-                int randomID = r.nextInt(100001);
                 units[posIndex] = switch (type) {
-                    case 0 -> new Infantry(playerID, randomID, kingdom, x, y);
-                    case 1 -> new Archer(playerID, randomID, kingdom, x, y);
-                    case 2 -> new Cavalry(playerID, randomID, kingdom, x, y);
-                    case 3 -> new Pikeman(playerID, randomID, kingdom, x, y);
+                    case 0 -> new Infantry(playerID, unitID, kingdom, x, y);
+                    case 1 -> new Archer(playerID, unitID, kingdom, x, y);
+                    case 2 -> new Cavalry(playerID, unitID, kingdom, x, y);
+                    case 3 -> new Pikeman(playerID, unitID, kingdom, x, y);
                     default -> throw new IllegalStateException("Unexpected unit type index: " + type);
                 };
                 
                 posIndex++;
+                unitID++;
             }
         }
 

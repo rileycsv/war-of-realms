@@ -20,7 +20,7 @@ public class DatabaseIO {
       -Attack_Range
       -UnitHealth
    */
-   public int getValue(String unitName, String value) {
+   public static int getValue(String unitName, String value) {
       //Creating the unit value that is returned
       int returnedValue = 0;
       //This line connects with the database in this file
