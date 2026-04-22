@@ -63,11 +63,11 @@ public abstract class Unit {
 	public abstract boolean[][] canAttack();
 
 	public boolean canAttackTile(int i, int j) {
-		return canAttackTile(i, j);
+		return canAttack()[i][j];
 	}
 	
 	public boolean canMoveToTile(int i, int j) {
-		return canMoveToTile(i, j);
+		return canMoveTo()[i][j];
 	}
 	
 	/** Spends all remaining movement points (called after the unit moves). */

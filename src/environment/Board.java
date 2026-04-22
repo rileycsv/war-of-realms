@@ -85,7 +85,7 @@ public class Board {
 	 */
 	public static char getBoardTile(int r, int c) {
 		Debug.log(3, "Accessing tile at row=" + r + ", col=" + c);
-		return BOARD[CURRENT_BOARD][r][c];
+		return getBoard()[r][c];
 	}
 
 	// Runtime state
@@ -369,35 +369,37 @@ public class Board {
 		}
 
 		// Painter's algorithm: draw diagonal by diagonal (back to front)
-        for (int diag = 0; diag < rows + cols; diag++) {
-            
-            // Draw tiles and highlights for the CURRENT diagonal
-            if (diag < rows + cols - 1) {
-                int rMin = Math.max(0, diag - (cols - 1));
-                int rMax = Math.min(diag, rows - 1);
-                for (int r = rMin; r <= rMax; r++) {
-                    int c = diag - r;
-                    drawTile(gc, r, c);
-                    drawTileHighlight(gc, r, c, moveHighlight, attackHighlight, selected);
-                }
-            }
+		for (int diag = 0; diag < rows + cols; diag++) {
+			
+			// Draw tiles and highlights for the CURRENT diagonal
+			if (diag < rows + cols - 1) {
+				int rMin = Math.max(0, diag - (cols - 1));
+				int rMax = Math.min(diag, rows - 1);
+				for (int r = rMin; r <= rMax; r++) {
+					int c = diag - r;
+					// UPDATED: Pass the highlight arrays and the selected unit down to drawTile
+					drawTile(gc, r, c, moveHighlight, attackHighlight, selected);
+					// UPDATED: drawTileHighlight now only handles the yellow selection indicator
+					drawTileHighlight(gc, r, c, selected); 
+				}
+			}
 
-            // Draw units for the PREVIOUS diagonal (diag - 1)
-            // This forces the unit to render AFTER the adjacent forward tiles, 
-            // but BEFORE the tile at (r+1, c+1)
-            int unitDiag = diag - 1;
-            if (unitDiag >= 0) {
-                int rMinUnit = Math.max(0, unitDiag - (cols - 1));
-                int rMaxUnit = Math.min(unitDiag, rows - 1);
-                for (int r = rMinUnit; r <= rMaxUnit; r++) {
-                    int c = unitDiag - r;
-                    Unit unitHere = getUnitAtTile(r, c);
-                    if (unitHere != null) {
-                        drawUnit(gc, unitHere);
-                    }
-                }
-            }
-        }
+			// Draw units for the PREVIOUS diagonal (diag - 1)
+			// This forces the unit to render AFTER the adjacent forward tiles, 
+			// but BEFORE the tile at (r+1, c+1)
+			int unitDiag = diag - 1;
+			if (unitDiag >= 0) {
+				int rMinUnit = Math.max(0, unitDiag - (cols - 1));
+				int rMaxUnit = Math.min(unitDiag, rows - 1);
+				for (int r = rMinUnit; r <= rMaxUnit; r++) {
+					int c = unitDiag - r;
+					Unit unitHere = getUnitAtTile(r, c);
+					if (unitHere != null) {
+						drawUnit(gc, unitHere);
+					}
+				}
+			}
+		}
 
 		gc.restore();
 	}
@@ -409,9 +411,8 @@ public class Board {
 	 * @param row The row of the tile
 	 * @param col The column of the tile
 	 */
-	private static void drawTile(GraphicsContext gc, int row, int col) {
+	private static void drawTile(GraphicsContext gc, int row, int col, boolean[][] moveHL, boolean[][] attackHL, Unit selected) {
 		double[] top = tileTopPoint(row, col);
-
 		Image img = getTile(row, col);
 
 		if (img != null) {
@@ -421,65 +422,126 @@ public class Board {
 			double drawX = top[0] - (imgW / 2.0);
 			double drawY;
 
-			// If the image is roughly the height of the top face (~22px), it's a flat tile
-			// (River).
-			// If it's taller, it contains the dirt block (Grass/Mountain).
 			if (imgH <= FACE_H + 2) {
-				// Flat tiles lack dirt. Anchor them directly to the top edge.
 				drawY = top[1];
 			} else {
-				// Block tiles have dirt. Align their bottom to the standard dirt baseline.
 				drawY = (top[1] + SPRITE_H) - imgH;
 			}
 
-			// Tint sprite on hover
+			// --- SPRITE TINTING & SHADING LOGIC ---
 			if (row == hoverRow && col == hoverCol) {
 				ColorAdjust highlight = new ColorAdjust();
 				highlight.setBrightness(0.3);
 				gc.setEffect(highlight);
+			} else if (selected != null && !GameManager.isSetupTurn()) {
+				Unit unitAtTile = getUnitAtTile(row, col);
+				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != selected.getPlayerID();
+				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == selected.getPlayerID();
+
+				if (isEnemy && attackHL[row][col]) {
+					// Highlight red: Uses a flat lighting effect to safely tint the sprite red 
+					// without messing with its transparent background pixels.
+					javafx.scene.effect.Lighting lighting = new javafx.scene.effect.Lighting();
+					javafx.scene.effect.Light.Distant light = new javafx.scene.effect.Light.Distant();
+					light.setColor(Color.rgb(255, 100, 100)); 
+					lighting.setLight(light);
+					lighting.setSurfaceScale(0.0); // Removes the 3D bump mapping
+					gc.setEffect(lighting);
+				} else if (!moveHL[row][col] || isAlly) {
+					// Darken slightly if the tile is unreachable OR occupied by an ally
+					ColorAdjust darken = new ColorAdjust();
+					darken.setBrightness(-0.4);
+					gc.setEffect(darken);
+				} else {
+					// Normal state (Reachable empty tiles remain their natural color)
+					gc.setEffect(null);
+				}
+			} else {
+				gc.setEffect(null);
 			}
 
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
-			gc.setEffect(null);
+			gc.setEffect(null); // Always clear the effect after drawing!
 
 		} else {
-			// Fallback uses the standard hardcoded dimensions instead of calculating them
+			// Fallback uses the standard hardcoded dimensions
 			double defaultDrawX = top[0] - TILE_W / 2.0;
 			double defaultDrawY = top[1];
 
 			gc.save();
 			clipToTopFace(gc, top);
-			gc.setFill(fallbackColor(getBoard()[row][col]));
-			gc.fillRect(defaultDrawX, defaultDrawY, TILE_W, SPRITE_H);
-
+			
+			Color baseColor = fallbackColor(getBoard()[row][col]);
+			
+			// Apply similar color adjustments for fallback polygons
 			if (row == hoverRow && col == hoverCol) {
-				gc.setFill(new Color(1, 1, 1, 0.3));
-				gc.fillRect(defaultDrawX, defaultDrawY, TILE_W, SPRITE_H);
+				baseColor = baseColor.deriveColor(0, 1, 1.3, 1);
+			} else if (selected != null && !GameManager.isSetupTurn()) {
+				Unit unitAtTile = getUnitAtTile(row, col);
+				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != selected.getPlayerID();
+				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == selected.getPlayerID();
+
+				if (isEnemy && attackHL[row][col]) {
+					baseColor = Color.rgb(255, 100, 100);
+				} else if (!moveHL[row][col] || isAlly) {
+					baseColor = baseColor.deriveColor(0, 1, 0.6, 1);
+				}
 			}
+
+			gc.setFill(baseColor);
+			gc.fillRect(defaultDrawX, defaultDrawY, TILE_W, SPRITE_H);
+			gc.restore();
+		}
+	}
+	
+	/**
+	 * Draws a semi-transparent yellow overlay on a tile to indicate 
+	 * the currently selected unit's position.
+	 */
+	private static void drawTileHighlight(GraphicsContext gc, int row, int col, Unit selected) {
+		if (selected != null && selected.getX() == row && selected.getY() == col) {
+			double[] top = tileTopPoint(row, col);
+			double hw = TILE_W / 2.0;
+			double hh = FACE_H / 2.0;
+
+			gc.save();
+
+			// Clip to the diamond face so the overlay doesn't bleed
+			gc.beginPath();
+			gc.moveTo(top[0], top[1]);
+			gc.lineTo(top[0] + hw, top[1] + hh);
+			gc.lineTo(top[0], top[1] + FACE_H);
+			gc.lineTo(top[0] - hw, top[1] + hh);
+			gc.closePath();
+			gc.clip();
+
+			gc.setFill(new Color(1.0, 1.0, 0.0, 0.45)); // Yellow: selected unit
+			gc.fillRect(top[0] - hw, top[1], TILE_W, FACE_H);
+
 			gc.restore();
 		}
 	}
 
 	/**
-     * Draws a unit on top of the tile, handling sprite alignment based on the
-     * tile's top vertex and the unit sprite's dimensions.
-     */
-    public static void drawUnit(GraphicsContext gc, Unit unit) {
-        double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
-        Image img = unit.getImage();
+	 * Draws a unit on top of the tile, handling sprite alignment based on the
+	 * tile's top vertex and the unit sprite's dimensions.
+	 */
+	public static void drawUnit(GraphicsContext gc, Unit unit) {
+		double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
+		Image img = unit.getImage();
 		
-        if (img != null) {
-            double imgW = img.getWidth();
-            double imgH = img.getHeight();
-            
-            // The number of pixels to nudge the unit UP. 
-            // Increase this to move the unit higher, decrease to move it lower.
-            double UNIT_Y_OFFSET = 10.0; 
-            
-            double drawX = top[0] - (imgW / 2.0);
-            
-            // Subtracting the offset moves the sprite UP in JavaFX
-            double drawY = (top[1] + SPRITE_H) - imgH - UNIT_Y_OFFSET; 
+		if (img != null) {
+			double imgW = img.getWidth();
+			double imgH = img.getHeight();
+			
+			// The number of pixels to nudge the unit UP. 
+			// Increase this to move the unit higher, decrease to move it lower.
+			double UNIT_Y_OFFSET = 10.0; 
+			
+			double drawX = top[0] - (imgW / 2.0);
+			
+			// Subtracting the offset moves the sprite UP in JavaFX
+			double drawY = (top[1] + SPRITE_H) - imgH - UNIT_Y_OFFSET; 
 			
 			double healthRatio = (double) unit.getHealth() / unit.getMaxHealth();
 			
@@ -491,57 +553,17 @@ public class Board {
 			gc.fillRect(drawX + healthBarOffsetX - .25, drawY - 2, healthBarWidth + 0.5, 1.5);
 			
 			if (healthRatio >= 0.70) {
-				gc.setFill(Color.rgb(16, 137, 16));
-			} else if (healthRatio > 0.70 && healthRatio <= 0.25) {
-				gc.setFill(Color.rgb(255, 247, 3));
+				gc.setFill(Color.rgb(16, 137, 16));   // Green: healthy
+			} else if (healthRatio > 0.25) {
+				gc.setFill(Color.rgb(255, 247, 3));   // Yellow: wounded
 			} else {
-				gc.setFill(Color.rgb(192, 45, 45));
+				gc.setFill(Color.rgb(192, 45, 45));   // Red: critical
 			}
 			
 			gc.fillRect(drawX + healthBarOffsetX, drawY - 1.75, healthRatio * healthBarWidth, 1);
 			
-            gc.drawImage(img, drawX, drawY, imgW, imgH);
-        }
-    }
-
-	/**
-	 * Draws a semi-transparent overlay on a tile to indicate move/attack range
-	 * or the currently selected unit's position.
-	 */
-	private static void drawTileHighlight(GraphicsContext gc, int row, int col, boolean[][] moveHL, boolean[][] attackHL, Unit selected) {
-		// Determine what color to overlay, if any
-		Color overlayColor = null;
-
-		if (selected != null && selected.getX() == row && selected.getY() == col) {
-			overlayColor = new Color(1.0, 1.0, 0.0, 0.45); // Yellow: selected unit's tile
-		} else if (attackHL[row][col]) {
-			overlayColor = new Color(1.0, 0.15, 0.15, 0.40); // Red: attackable
-		} else if (moveHL[row][col]) {
-			overlayColor = new Color(0.25, 0.65, 1.0, 0.35); // Blue: reachable
+			gc.drawImage(img, drawX, drawY, imgW, imgH);
 		}
-
-		if (overlayColor == null)
-			return;
-
-		double[] top = tileTopPoint(row, col);
-		double hw = TILE_W / 2.0;
-		double hh = FACE_H / 2.0;
-
-		gc.save();
-
-		// Clip to the diamond face so the overlay doesn't bleed onto adjacent tiles
-		gc.beginPath();
-		gc.moveTo(top[0], top[1]);
-		gc.lineTo(top[0] + hw, top[1] + hh);
-		gc.lineTo(top[0], top[1] + FACE_H);
-		gc.lineTo(top[0] - hw, top[1] + hh);
-		gc.closePath();
-		gc.clip();
-
-		gc.setFill(overlayColor);
-		gc.fillRect(top[0] - hw, top[1], TILE_W, FACE_H);
-
-		gc.restore();
 	}
 
 	private static final Tile GRASS_TILE = new GrassTile();
