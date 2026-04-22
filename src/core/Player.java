@@ -1,5 +1,8 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import entities.*;
 import environment.Board;
 
@@ -9,6 +12,31 @@ import environment.Board;
  */
 public class Player {
 	private String kingdom = "debug";
+	
+	private ArrayList<Integer> unitIDs = new ArrayList<>();
+	
+	public int[] getUnitIDs() {
+		int[] ret = new int[unitIDs.size()];
+		for (int i = 0; i < unitIDs.size(); i++) {
+			ret[i] = unitIDs.get(i); // Auto-unboxing converts Integer to int
+		}
+		return ret;
+	}
+	
+	public void addUnitID(int unitID) {
+		unitIDs.add(unitID);
+	}
+	
+	public int getTotalHealth() {
+        int totalHealth = 0;
+        for (int unitID : unitIDs) { // Enhanced for-loop still works perfectly here
+            Unit unit = GameManager.getUnitByID(unitID);
+            if (unit != null) {
+                totalHealth += unit.getHealth();
+            }
+        }
+        return totalHealth;
+    }
 	
 	public Unit[] getUnits(int x, int y) {
 		return Kingdoms.getUnitsForKingdom(kingdom, playerID, new int[] {x, y});

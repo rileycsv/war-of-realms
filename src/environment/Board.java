@@ -232,11 +232,7 @@ public class Board {
 		if (unitAtTile == null) {
 			// Clicked empty tile: move selected unit there if it can reach it
 			boolean canMove = false;
-			try {
-				canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
-			} catch (UnsupportedOperationException ex) {
-				Debug.log(2, "Unimplimented canMoveToTile called for unit " + selected);
-			}
+			canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
 			
 			if (canMove) {
 				UNITS_BOARD[selected.getX()][selected.getY()] = null;
@@ -252,8 +248,12 @@ public class Board {
 			// Clicked own unit — select it
 			GameManager.setSelectedUnit(unitAtTile);
 		} else {
-			// Clicked enemy unit — deselect (combat not yet implemented)
-			GameManager.clearSelection();
+			// Clicked enemy unit — attack if within range
+			if (selected != null && GameManager.getUnitCanAttack()[clickedTile[0]][clickedTile[1]]) {
+				GameManager.unitAttacks(unitAtTile);
+			} else {
+				GameManager.clearSelection();
+			}
 		}
 		render();
 	}
@@ -329,7 +329,7 @@ public class Board {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		double cw = canvas.getWidth();
-    	double ch = canvas.getHeight();
+		double ch = canvas.getHeight();
 
 		gc.setImageSmoothing(false);
 		gc.setTransform(1, 0, 0, 1, 0, 0);
@@ -447,7 +447,7 @@ public class Board {
 				} else if (!GameManager.getUnitCanMoveTo()[row][col] || isAlly) {
 					// Darken slightly if the tile is unreachable OR occupied by an ally
 					ColorAdjust darken = new ColorAdjust();
-					darken.setBrightness(-0.2);
+					darken.setBrightness(-0.5);
 					gc.setEffect(darken);
 				} else {
 					// Normal state (Reachable empty tiles remain their natural color)
@@ -519,7 +519,7 @@ public class Board {
 			gc.restore();
 		}
 	}
-
+	
 	/**
 	 * Draws a unit on top of the tile, handling sprite alignment based on the
 	 * tile's top vertex and the unit sprite's dimensions.
@@ -541,25 +541,18 @@ public class Board {
 			// Subtracting the offset moves the sprite UP in JavaFX
 			double drawY = (top[1] + SPRITE_H) - imgH - UNIT_Y_OFFSET; 
 			
-			double healthRatio = (double) unit.getHealth() / unit.getMaxHealth();
+			double healthRatio = Math.max(0, (double) unit.getHealth() / unit.getMaxHealth()); 
 			
 			double healthBarWidth = 8;
-			
 			double healthBarOffsetX = (imgW - healthBarWidth) / 2.0;
-			
+
 			gc.setFill(Color.ANTIQUEWHITE);
 			gc.fillRect(drawX + healthBarOffsetX - .25, drawY - 2, healthBarWidth + 0.5, 1.5);
-			
-			if (healthRatio >= 0.70) {
-				gc.setFill(Color.rgb(16, 137, 16));   // Green: healthy
-			} else if (healthRatio > 0.25) {
-				gc.setFill(Color.rgb(255, 247, 3));   // Yellow: wounded
-			} else {
-				gc.setFill(Color.rgb(192, 45, 45));   // Red: critical
-			}
-			
+
+			// Linear gradient, hue scales from 0 (Red) to 120 (Green)
+			gc.setFill(Color.hsb(healthRatio * 120, 0.85, 0.8)); 
+
 			gc.fillRect(drawX + healthBarOffsetX, drawY - 1.75, healthRatio * healthBarWidth, 1);
-			
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
 		}
 	}

@@ -218,31 +218,23 @@ public class GameManager {
 	 *
 	 * @return The active player.
 	 */
-    public static Player getActivePlayer() {
-        return players[activePlayerID];
-    }
+	public static Player getActivePlayer() {
+		return players[activePlayerID];
+	}
 
 	/**
 	 * Searches every tile on the board to find where the given unit is located.
 	 *
 	 * @param unit The unit to locate.
 	 * @return An {@code int[]} of {@code {row, col}}, or {@code {-1, -1}} if the
-	 *         unit is not found on the board.
+	 *		 unit is not found on the board.
 	 */
 	public static int[] getPositionOfUnit(Unit unit) {
-		for(int i = 0; i < Board.getBoard().length; i++) {
-			for(int j = 0; j < Board.getBoard()[0].length; j++) {
-				Unit comp = Board.getUnitAtTile(i, j);
-				if(comp == null) {
-					continue; // Skip empty tiles
-				}
-				if(comp.getUnitID() == unit.getUnitID()) {
-					return new int[] {i, j};
-				}
-			}
+		if (unit != null && unit.getX() >= 0 && unit.getY() >= 0) {
+			return new int[] {unit.getX(), unit.getY()};
 		}
-		Debug.log(2, "Warning: Unit not found on board in GameManager.getPositionOfUnit. Returning invalid position.");
-		return new int[] {-1, -1}; // Return an invalid position if the unit is not found
+		Debug.log(2, "Warning: Unit has invalid position.");
+		return new int[] {-1, -1};
 	}
 
 	public static void moveUnit(Unit unit, int row, int col) {
@@ -256,7 +248,59 @@ public class GameManager {
 			Debug.log(2, "Error: No unit selected for attack.");
 			return;
 		}
-		int damage = selectedUnit.getAttackDamage();
 		
+		// Deal damage to the defender
+		int damage = selectedUnit.getAttackDamage();
+		defender.receiveDamage(damage);
+		
+		// Unit can no longer move after attacking
+		selectedUnit.spendAllMovement();
+		
+		// End the turn automatically after an attack
+		endTurn(); 
+	}
+	
+	/**
+	 * Removes a unit from the board and checks if the player has lost all of their units.
+	 * @param unit
+	 */
+	public static void removeUnit(Unit unit) {
+		// 1. Instantly remove the unit using its known coordinates
+		int x = unit.getX();
+		int y = unit.getY();
+		
+		if (Board.getUnitAtTile(x, y) != null && Board.getUnitAtTile(x, y).getUnitID() == unit.getUnitID()) {
+			Board.getUnitsBoard()[x][y] = null; 
+			Debug.log(2, "Unit removed: " + unit);
+		}
+
+		// 2. Check if the player has any units left
+		boolean hasUnitsLeft = false;
+		for (Unit[] row : Board.getUnitsBoard()) {
+			for (Unit u : row) {
+				if (u != null && u.getPlayerID() == unit.getPlayerID()) {
+					hasUnitsLeft = true;
+					break; // Found one! No need to keep looking at this row
+				}
+			}
+			if (hasUnitsLeft) break; // Stop checking the rest of the board
+		}
+
+		if (!hasUnitsLeft) {
+			System.out.println("Player " + unit.getPlayerID() + " has lost all their units! Game Over.");
+		}
+	}
+	
+	public static Unit getUnitByID(int unitID) {
+		for (int i = 0; i < Board.getUnitsBoard().length; i++) {
+			for (int j = 0; j < Board.getUnitsBoard()[0].length; j++) {
+				Unit unit = Board.getUnitAtTile(i, j);
+				if (unit != null && unit.getUnitID() == unitID) {
+					return unit;
+				}
+			}
+		}
+		Debug.log(2, "Warning: No unit found with ID " + unitID);
+		return null; // Return null if no matching unit is found
 	}
 }
