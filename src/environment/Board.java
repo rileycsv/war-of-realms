@@ -124,14 +124,13 @@ public class Board {
 		root.setStyle("-fx-background-color: #ffffff;");
 		root.getChildren().addAll(endTurnButton);
 		
-		Main.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-			canvas.setWidth((double) newVal);
-			render();
-		});
-		Main.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-			canvas.setHeight((double) newVal);
-			render();
-		});
+		// Bind canvas size to the root layout pane
+		canvas.widthProperty().bind(root.widthProperty());
+		canvas.heightProperty().bind(root.heightProperty());
+
+		// Rerender the board anytime the canvas dimensions change
+		canvas.widthProperty().addListener((obs, oldVal, newVal) -> render());
+		canvas.heightProperty().addListener((obs, oldVal, newVal) -> render());
 
 		endTurnButton.setOnAction(e -> {
 			GameManager.endTurn();
@@ -328,12 +327,15 @@ public class Board {
 	 */
 	private static void render() {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		double cw = canvas.getWidth();
+    	double ch = canvas.getHeight();
 
 		gc.setImageSmoothing(false);
 		gc.setTransform(1, 0, 0, 1, 0, 0);
 		gc.setFill(Color.web("#111111"));
-		gc.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
+		gc.fillRect(0, 0, cw, ch);
+		
 		gc.save();
 		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0);
 		gc.scale(zoom, zoom);
