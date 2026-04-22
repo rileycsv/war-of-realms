@@ -26,6 +26,15 @@ public class GameManager {
 	public static Player[] players = new Player[2];
 	private static int activePlayerID = -1;
 	private static Unit selectedUnit = null;
+	
+	private static boolean[][] unitCanMoveTo = null; 
+	public static boolean[][] getUnitCanMoveTo() {
+		return unitCanMoveTo;
+	}
+	private static boolean[][] unitCanAttack = null;
+	public static boolean[][] getUnitCanAttack() {
+		return unitCanAttack;
+	}
 
 	// =====================================================
 	// Selection Management
@@ -37,6 +46,8 @@ public class GameManager {
 	 * @param unit The unit to select.
 	 */
 	public static void setSelectedUnit(Unit unit) {
+		unitCanMoveTo = unit.canMoveTo();
+		unitCanAttack = unit.canAttack();
 		Debug.log(3, "Selected unit: " + unit);
 		selectedUnit = unit;
 	}
@@ -232,5 +243,20 @@ public class GameManager {
 		}
 		Debug.log(2, "Warning: Unit not found on board in GameManager.getPositionOfUnit. Returning invalid position.");
 		return new int[] {-1, -1}; // Return an invalid position if the unit is not found
+	}
+
+	public static void moveUnit(Unit unit, int row, int col) {
+		Board.getUnitsBoard()[unit.getX()][unit.getY()] = null; // Clear the unit's current position on the board
+		Board.getUnitsBoard()[row][col] = unit; 
+		unit.setPos(row, col); // Update the unit's internal position
+	}
+	
+	public static void unitAttacks(Unit defender) {
+		if (selectedUnit == null) {
+			Debug.log(2, "Error: No unit selected for attack.");
+			return;
+		}
+		int damage = selectedUnit.getAttackDamage();
+		
 	}
 }

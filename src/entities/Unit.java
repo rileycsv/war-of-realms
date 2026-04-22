@@ -46,6 +46,17 @@ public abstract class Unit {
 		// after super() returns, so loading here would always use "../debug.png".
 	}
 	
+	public int getAttackDamage() {
+		return this.attackDamage;
+	}
+	
+	public void receiveDamage(int damage) {
+		this.currentHealth -= damage;
+		if (this.currentHealth < 0) {
+			this.sprite = new Image("file:assets/units/grave.png");
+		}
+	}
+	
     /**
      * Determines what tiles a unit can move to based on its movement range.
 	 * @param row
@@ -70,7 +81,7 @@ public abstract class Unit {
 		return canMoveTo()[i][j];
 	}
 	
-	/** Spends all remaining movement points (called after the unit moves). */
+	/** Spends all remaining movement points (called after the unit attacks). */
 	public void spendAllMovement() {
 		this.currentMovement = 0;
 	}
@@ -106,12 +117,12 @@ public abstract class Unit {
 		Debug.log(3, String.format("Unit.getPos() called for %s/%s at (%d,%d)", kingdom, UNIT_TYPE, pos[0], pos[1]));
 		return this.pos;
 	}
-
-	public void moveTo(int row, int col) {
+	
+	public void setPos(int row, int col) {
 		this.pos[0] = row;
 		this.pos[1] = col;
 	}
-
+	
 	/**
 	 * Retrieves the dynamic path for this unit's sprite based on their owning
 	 * player's kingdom.

@@ -56,11 +56,6 @@ public class Board {
 		return UNITS_BOARD;
 	}
 
-	
-	private static final char[][][] BOARD = {
-			
-	};
-
 	/**
 	 * Returns the current board
 	 */
@@ -70,9 +65,9 @@ public class Board {
 	}
 
 	public static int[][] getBoardCosts() {
-		final int[][] ret = new int[BOARD[CURRENT_BOARD].length][BOARD[CURRENT_BOARD][0].length];
-		for (int r = 0; r < BOARD[CURRENT_BOARD].length; r++) {
-			for (int c = 0; c < BOARD[CURRENT_BOARD][r].length; c++) {
+		final int[][] ret = new int[getBoard().length][getBoard()[0].length];
+		for (int r = 0; r < getBoard().length; r++) {
+			for (int c = 0; c < getBoard()[r].length; c++) {
 				int cost = getTileCost(r, c);
 				ret[r][c] = cost;
 			}
@@ -246,7 +241,7 @@ public class Board {
 			
 			if (canMove) {
 				UNITS_BOARD[selected.getX()][selected.getY()] = null;
-				selected.moveTo(clickedTile[0], clickedTile[1]);
+				GameManager.moveUnit(selected, clickedTile[0], clickedTile[1]);
 				UNITS_BOARD[clickedTile[0]][clickedTile[1]] = selected;
 				selected.spendAllMovement();
 				GameManager.clearSelection();
@@ -378,7 +373,7 @@ public class Board {
 				for (int r = rMin; r <= rMax; r++) {
 					int c = diag - r;
 					// UPDATED: Pass the highlight arrays and the selected unit down to drawTile
-					drawTile(gc, r, c, moveHighlight, attackHighlight, selected);
+					drawTile(gc, r, c);
 					// UPDATED: drawTileHighlight now only handles the yellow selection indicator
 					drawTileHighlight(gc, r, c, selected); 
 				}
@@ -411,7 +406,7 @@ public class Board {
 	 * @param row The row of the tile
 	 * @param col The column of the tile
 	 */
-	private static void drawTile(GraphicsContext gc, int row, int col, boolean[][] moveHL, boolean[][] attackHL, Unit selected) {
+	private static void drawTile(GraphicsContext gc, int row, int col) {
 		double[] top = tileTopPoint(row, col);
 		Image img = getTile(row, col);
 
@@ -433,12 +428,12 @@ public class Board {
 				ColorAdjust highlight = new ColorAdjust();
 				highlight.setBrightness(0.3);
 				gc.setEffect(highlight);
-			} else if (selected != null && !GameManager.isSetupTurn()) {
+			} else if (GameManager.getSelectedUnit() != null && !GameManager.isSetupTurn()) {
 				Unit unitAtTile = getUnitAtTile(row, col);
-				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != selected.getPlayerID();
-				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == selected.getPlayerID();
-
-				if (isEnemy && attackHL[row][col]) {
+				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != GameManager.getSelectedUnit().getPlayerID();
+				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getSelectedUnit().getPlayerID();
+				
+				if (isEnemy && GameManager.getUnitCanAttack()[row][col]) {
 					// Highlight red: Uses a flat lighting effect to safely tint the sprite red 
 					// without messing with its transparent background pixels.
 					javafx.scene.effect.Lighting lighting = new javafx.scene.effect.Lighting();
@@ -447,10 +442,10 @@ public class Board {
 					lighting.setLight(light);
 					lighting.setSurfaceScale(0.0); // Removes the 3D bump mapping
 					gc.setEffect(lighting);
-				} else if (!moveHL[row][col] || isAlly) {
+				} else if (!GameManager.getUnitCanMoveTo()[row][col] || isAlly) {
 					// Darken slightly if the tile is unreachable OR occupied by an ally
 					ColorAdjust darken = new ColorAdjust();
-					darken.setBrightness(-0.4);
+					darken.setBrightness(-0.2);
 					gc.setEffect(darken);
 				} else {
 					// Normal state (Reachable empty tiles remain their natural color)
@@ -464,6 +459,7 @@ public class Board {
 			gc.setEffect(null); // Always clear the effect after drawing!
 
 		} else {
+			Debug.log(2, "Using fallback polygon for tile at row=" + row + ", col=" + col);
 			// Fallback uses the standard hardcoded dimensions
 			double defaultDrawX = top[0] - TILE_W / 2.0;
 			double defaultDrawY = top[1];
@@ -473,17 +469,17 @@ public class Board {
 			
 			Color baseColor = fallbackColor(getBoard()[row][col]);
 			
-			// Apply similar color adjustments for fallback polygons
+			// Apply color adjustments for fallback polygons
 			if (row == hoverRow && col == hoverCol) {
 				baseColor = baseColor.deriveColor(0, 1, 1.3, 1);
-			} else if (selected != null && !GameManager.isSetupTurn()) {
+			} else if (GameManager.getSelectedUnit() != null && !GameManager.isSetupTurn()) {
 				Unit unitAtTile = getUnitAtTile(row, col);
-				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != selected.getPlayerID();
-				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == selected.getPlayerID();
+				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != GameManager.getSelectedUnit().getPlayerID();
+				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getSelectedUnit().getPlayerID();
 
-				if (isEnemy && attackHL[row][col]) {
+				if (isEnemy && GameManager.getUnitCanAttack()[row][col]) {
 					baseColor = Color.rgb(255, 100, 100);
-				} else if (!moveHL[row][col] || isAlly) {
+				} else if (!GameManager.getUnitCanMoveTo()[row][col] || isAlly) {
 					baseColor = baseColor.deriveColor(0, 1, 0.6, 1);
 				}
 			}
@@ -549,7 +545,7 @@ public class Board {
 			
 			double healthBarOffsetX = (imgW - healthBarWidth) / 2.0;
 			
-			gc.setFill(Color.rgb(194, 192, 192));
+			gc.setFill(Color.ANTIQUEWHITE);
 			gc.fillRect(drawX + healthBarOffsetX - .25, drawY - 2, healthBarWidth + 0.5, 1.5);
 			
 			if (healthRatio >= 0.70) {
