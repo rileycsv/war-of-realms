@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -116,7 +117,7 @@ public class Board {
 
 		StackPane root = new StackPane(canvas);
 		Button endTurnButton = new Button("End Turn");
-		endTurnButton.setStyle("-fx-font-size: 16px; -fx-padding: 10px 20px;");
+		endTurnButton.setStyle("-fx-font-size: 16px; -fx-height: 100px; -fx-width: 100px; -fx-padding: 10px 20px; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-background-color: #007ACC; -fx-text-fill: white;");
 		StackPane.setAlignment(endTurnButton, Pos.BOTTOM_RIGHT);
 		// Initialize the scene with a stack containing the canvas
 		Scene scene = new Scene(root, CANVAS_W, CANVAS_H);
@@ -735,5 +736,28 @@ public class Board {
 		}
 
 		return true; // No adjacent units found, and no boundaries hit
+	}
+	
+	/**
+	 * Creates and displays a popup over the board when one player remains alive. 
+	 */
+	public static void showEndGameScreen() {
+		StackPane popup = new StackPane();
+		popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 40px; -fx-border-radius: 10px;");
+		popup.setAlignment(Pos.CENTER);
+		
+		Label endGameLabel = new Label("Game Over! Player " + (GameManager.getActivePlayerID() + 1) + " wins!");
+		endGameLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: white;");
+		Button exitButton = new Button("Exit Game");
+		exitButton.setStyle("-fx-font-size: 18px; -fx-padding: 10px 20px;");
+		exitButton.setOnAction(e -> Main.exit());
+
+		popup.getChildren().addAll(endGameLabel, exitButton);
+				
+		Scene scene = canvas.getScene();
+		if (scene != null) {
+			StackPane root = (StackPane) scene.getRoot();
+			root.getChildren().add(popup);
+		}
 	}
 }

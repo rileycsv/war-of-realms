@@ -54,7 +54,6 @@ public abstract class Unit {
 	public void receiveDamage(int damage) {
 		this.currentHealth -= damage;
 		if (this.currentHealth <= 0) {
-			this.currentHealth = 0;
 			GameManager.removeUnit(this);
 		}
 	}
@@ -140,7 +139,16 @@ public abstract class Unit {
 		return String.format("Unit{type: %s, playerID: %d, pos: (%d,%d), health: %d/%d}%n", UNIT_TYPE, PLAYER_ID, pos[0], pos[1], currentHealth, health);
 	}
 	
+	/**
+	 * Determines what tiles a unit can move to based on its current movement points and the terrain costs.
+	 * Uses a BFS flood fill algorithm to explore reachable tiles.
+	 * @return
+	 */
 	public boolean[][] canMoveTo() {
+		boolean debugInstakillOnClick = false; // Set to true to test unit death and removal from board
+		if (Debug.isEnabled() && debugInstakillOnClick) {
+			receiveDamage(10);; // Temporary hack to test unit death and removal from board
+		}
 		char[][] board = Board.getBoard();
 		int[][] boardCosts = Board.getBoardCosts();
 		int rows = board.length;

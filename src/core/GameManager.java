@@ -287,6 +287,7 @@ public class GameManager {
 		}
 
 		if (!hasUnitsLeft) {
+			Board.showEndGameScreen();
 			System.out.println("Player " + unit.getPlayerID() + " has lost all their units! Game Over.");
 		}
 	}

@@ -81,4 +81,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) { launch(args); }
+
+    public static Object exit() {
+        Debug.println(2, "Exiting program");
+		System.exit(0);
+		primaryStage.close();
+		return null; // Unreachable, but required for method signature
+    }
 }
