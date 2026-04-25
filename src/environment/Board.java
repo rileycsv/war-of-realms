@@ -82,6 +82,10 @@ public class Board {
 		Debug.log(3, "Accessing tile at row=" + r + ", col=" + c);
 		return getBoard()[r][c];
 	}
+	
+	// Styles for the end turn button
+	private static String endTurnButtonStyle = "-fx-font-size: 16px; -fx-height: 100px; -fx-width: 100px; -fx-padding: 10px 20px; -fx-text-fill: white;";
+
 
 	// Runtime state
 	private static Canvas canvas;
@@ -116,7 +120,10 @@ public class Board {
 
 		StackPane root = new StackPane(canvas);
 		Button endTurnButton = new Button("End Turn");
-		endTurnButton.setStyle("-fx-font-size: 16px; -fx-height: 100px; -fx-width: 100px; -fx-padding: 10px 20px; -fx-border-radius: 50%; -fx-background-radius: 50%; -fx-background-color: #007ACC; -fx-text-fill: white;");
+		endTurnButton.setId("endTurnButton"); 
+		
+		// Set the initial background color based on the active player's kingdom color
+		endTurnButton.setStyle(endTurnButtonStyle + String.format("-fx-background-color: %s;", GameManager.getActivePlayer().getKingdomColor().toString().replace("0x", "#")));
 		StackPane.setAlignment(endTurnButton, Pos.BOTTOM_RIGHT);
 		// Initialize the scene with a stack containing the canvas
 		Scene scene = new Scene(root, CANVAS_W, CANVAS_H);
@@ -134,6 +141,7 @@ public class Board {
 
 		endTurnButton.setOnAction(e -> {
 			GameManager.endTurn();
+			endTurnButton.setStyle(endTurnButtonStyle + String.format("-fx-background-color: %s;", GameManager.getActivePlayer().getKingdomColor().toString().replace("0x", "#")));
 			canvas.requestFocus(); // Return focus to the canvas after clicking the button
 		});
 		
@@ -224,9 +232,10 @@ public class Board {
 			}
 			centerCameraOnTile(clickedTile[0], clickedTile[1]);
 			render();
+			Main.primaryStage.getScene().lookup("#endTurnButton").setStyle(endTurnButtonStyle + String.format("-fx-background-color: %s;", GameManager.getActivePlayer().getKingdomColor().toString().replace("0x", "#")));
 			return; // Never fall through to gameplay logic during setup
 		}
-
+		
 		// Gameplay phase
 		Unit selected = GameManager.getSelectedUnit();
 		if (unitAtTile == null) {
@@ -330,7 +339,7 @@ public class Board {
 		
 		double cw = canvas.getWidth();
 		double ch = canvas.getHeight();
-
+		
 		gc.setImageSmoothing(false);
 		gc.setTransform(1, 0, 0, 1, 0, 0);
 		gc.setFill(Color.web("#111111"));
@@ -340,15 +349,15 @@ public class Board {
 		gc.translate(CANVAS_W / 2.0, CANVAS_H / 2.0);
 		gc.scale(zoom, zoom);
 		gc.translate(-cameraX, -cameraY);
-
+		
 		// Build highlight maps once per frame from the selected unit
 		char[][] board = getBoard();
 		int rows = board.length;
 		int cols = board[0].length;
-
+		
 		boolean[][] moveHighlight = new boolean[rows][cols];
 		boolean[][] attackHighlight = new boolean[rows][cols];
-
+		
 		Unit selected = GameManager.getSelectedUnit();
 		if (selected != null && !GameManager.isSetupTurn()) {
 			try {
@@ -364,10 +373,9 @@ public class Board {
 				Debug.log(2, "Unimplimented canMoveTo/canAttack called for unit " + selected);
 			}
 		}
-
+		
 		// Painter's algorithm: draw diagonal by diagonal (back to front)
 		for (int diag = 0; diag < rows + cols; diag++) {
-			
 			// Draw tiles and highlights for the CURRENT diagonal
 			if (diag < rows + cols - 1) {
 				int rMin = Math.max(0, diag - (cols - 1));
@@ -380,7 +388,7 @@ public class Board {
 					drawTileHighlight(gc, r, c, selected); 
 				}
 			}
-
+			
 			// Draw units for the PREVIOUS diagonal (diag - 1)
 			// This forces the unit to render AFTER the adjacent forward tiles, 
 			// but BEFORE the tile at (r+1, c+1)
@@ -397,10 +405,10 @@ public class Board {
 				}
 			}
 		}
-
+		
 		gc.restore();
 	}
-
+	
 	/**
 	 * Draws a tile, handles positioning of differently sized tile sprites
 	 * 
@@ -411,20 +419,20 @@ public class Board {
 	private static void drawTile(GraphicsContext gc, int row, int col) {
 		double[] top = tileTopPoint(row, col);
 		Image img = getTile(row, col);
-
+		
 		if (img != null) {
 			double imgW = img.getWidth();
 			double imgH = img.getHeight();
-
+			
 			double drawX = top[0] - (imgW / 2.0);
 			double drawY;
-
+			
 			if (imgH <= FACE_H + 2) {
 				drawY = top[1];
 			} else {
 				drawY = (top[1] + SPRITE_H) - imgH;
 			}
-
+			
 			// --- SPRITE TINTING & SHADING LOGIC ---
 			if (row == hoverRow && col == hoverCol) {
 				ColorAdjust highlight = new ColorAdjust();

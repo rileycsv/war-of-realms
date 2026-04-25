@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import entities.*;
 import environment.Board;
+import javafx.scene.paint.Color;
 
 /**
  * Represents a single participant in the game.
@@ -11,6 +12,15 @@ import environment.Board;
  */
 public class Player {
 	private String kingdom = "debug";
+	
+	public Color getKingdomColor() { Color ret = switch (kingdom) {
+		case "Hussites"   -> Color.rgb(21, 64, 181);
+		case "Portuguese" -> Color.rgb(38, 106, 40);
+		case "Mongolians" -> Color.rgb(221, 200, 21);
+		case "Aztec"	  -> Color.rgb(233, 120, 17);
+		case "English"	-> Color.rgb(239, 28, 15);
+		default		   -> Color.GRAY; // Fallback color for invalid kingdom
+	}; return ret; }
 	
 	private ArrayList<Integer> unitIDs = new ArrayList<>();
 	
