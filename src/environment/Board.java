@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import main.Main;
 import javafx.scene.effect.ColorAdjust;
 import javafx.geometry.Pos;

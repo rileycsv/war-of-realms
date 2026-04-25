@@ -1,7 +1,6 @@
 package entities;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import environment.Board;
 import utils.Debug;
