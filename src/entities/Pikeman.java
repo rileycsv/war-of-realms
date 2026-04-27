@@ -8,7 +8,7 @@ public class Pikeman extends Unit {
         super(PID, UID, kingdom, x, y);
         super.UNIT_TYPE = "pikeman.png";
         this.maxMovement = DatabaseIO.getValue("Pikemen", "Movement_Speed");
-        this.health = DatabaseIO.getValue("Pikemen", "UnitHealth");
+        this.health = DatabaseIO.getValue("Pikemen", "Unit_Health");
         this.attackDamage = 5;
         this.attackRange = DatabaseIO.getValue("Pikemen", "Attack_Range");
         this.currentHealth = health;
