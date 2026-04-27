@@ -9,6 +9,11 @@
 - [ ] Update `README.md` project structure
 - [ ] Optional: Move JavaFX into `lib/` folder
 
+## Random Stuff
+- [ ] Update 'ReadME' to describe sqlite driver installation
+- [ ] Copy and paste 'Scenes' into src so we don't have to manually do it everytime
+- [ ] Create a UML diagram
+
 
 ### Note:
 You can double click this to edit it. 
