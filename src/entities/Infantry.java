@@ -7,7 +7,7 @@ public class Infantry extends Unit {
         super(PID, UID, kingdom, x, y);
         super.UNIT_TYPE = "infantry.png";
         this.maxMovement = DatabaseIO.getValue("Infantry", "Movement_Speed");
-        this.health = DatabaseIO.getValue("Infantry", "UnitHealth");
+        this.health = DatabaseIO.getValue("Infantry", "Unit_Health");
         this.attackDamage = 9;
         this.attackRange = DatabaseIO.getValue("Infantry", "Attack_Range");
         this.currentHealth = health;
