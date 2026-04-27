@@ -35,19 +35,19 @@ public final class ScreenFlows {
 		String fileName = "";
 		switch (id) {
 			case 0:
-				fileName = "/scenes/startGame.fxml";
+				fileName = "/assets/scenes/startGame.fxml";
 				break;
 			case 1:
-				fileName = "/scenes/playerOneEmpire.fxml";
+				fileName = "/assets/scenes/playerOneEmpire.fxml";
 				break;
 			case 2:
-				fileName = "/scenes/playerTwoEmpire.fxml";
+				fileName = "/assets/scenes/playerTwoEmpire.fxml";
 				break;
 			case 3:
 				Main.primaryStage.setScene(BoardForMenuPath.scene());
 				return;
 			case 4:
-				fileName = "/scenes/chooseBattlefield.fxml";
+				fileName = "/assets/scenes/chooseBattlefield.fxml";
 				break;
 			default:
 				Debug.error("Unknown screen id: " + id);

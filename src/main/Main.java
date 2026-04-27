@@ -48,13 +48,13 @@ public class Main extends Application {
 		String fileName = "";
 		switch (id) {
 			case 0:
-			    fileName = "/scenes/startGame.fxml";  // ← add leading /
+			    fileName = "/assets/scenes/startGame.fxml";  // ← add leading /
 			    break;
 			case 1:
-			    fileName = "/scenes/playerOneEmpire.fxml";
+			    fileName = "/assets/scenes/playerOneEmpire.fxml";
 			    break;
 			case 2:
-			    fileName = "/scenes/playerTwoEmpire.fxml";
+			    fileName = "/assets/scenes/playerTwoEmpire.fxml";
 			    break;
 			case 3:
 				// Set the scene to the game board
@@ -62,7 +62,7 @@ public class Main extends Application {
 				// Exit the function early since no FXML file needs to be loaded
 				return;
 			case 4:
-			    fileName = "/scenes/chooseBattlefield.fxml";
+			    fileName = "/assets/scenes/chooseBattlefield.fxml";
 			    break;
 		}
 		

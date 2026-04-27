@@ -18,26 +18,32 @@
       "problemMatcher": []
     },
     {
+      "label": "Generate Source List",
+      "type": "shell",
+      "command": "dir /s /B src\\*.java > sources.txt",
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Compile Java Files",
       "type": "shell",
       "command": "C:\\Program Files\\Java\\jdk-25.0.2\\bin\\javac.exe",
       "args": [
         "-d", "bin",
-        "-cp", "src;C:\\javafx-sdk-25.0.2\\lib\\*",
-        "--module-path", "C:\\javafx-sdk-25.0.2\\lib\\",
+        "-cp", "src;.\\lib\\javafx-sdk-25.0.2\\\\lib\\*",
+        "--module-path", ".\\lib\\javafx-sdk-25.0.2\\lib\\",
         "--add-modules", "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
         "-sourcepath", "src",
-        "src/main/Main.java",
-        "src/core/GameManager.java",
-        "src/core/Player.java",
-        "src/entities/Unit.java",
-        "src/environment/Board.java",
-        "src/environment/tile/Tile.java",
-        "src/environment/tile/GrassTile.java",
-        "src/environment/tile/MountainTile.java",
-        "src/environment/tile/RiverTile.java",
-        "src/environment/tile/VoidTile.java",
-        "src/utils/Debug.java"
+        "@sources.txt"
       ],
       "options": {
         "shell": {
@@ -45,7 +51,11 @@
           "args": ["/d", "/c"]
         }
       },
-      "dependsOn": ["Create bin Directory"],
+      "dependsOn": [
+        "Create bin Directory",
+        "Generate Source List",
+        "Copy Assets to bin"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -63,7 +73,7 @@
       "type": "shell",
       "command": "C:\\Program Files\\Java\\jdk-25.0.2\\bin\\java.exe",
       "args": [
-        "--module-path", "C:\\javafx-sdk-25.0.2\\lib\\",
+        "--module-path", ".\\lib\\javafx-sdk-25.0.2\\lib\\",
         "--add-modules", "javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web",
         "-cp", "bin",
         "main.Main"
@@ -85,6 +95,23 @@
         "focus": true,
         "panel": "shared"
       },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copy Assets to bin",
+      "type": "shell",
+      "command": "xcopy assets bin\\assets /E /I /Y /D",
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "dependsOn": ["Create bin Directory"],
       "problemMatcher": []
     }
   ]
