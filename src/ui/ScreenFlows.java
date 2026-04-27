@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import main.Main;
 import utils.Debug;
 
 /**
@@ -21,10 +21,8 @@ public final class ScreenFlows {
 	 * {@code Board} when {@code setScreen(3)} is used there; unify later if both must match.
 	 */
 	private static final class BoardForMenuPath {
-		static final Board BOARD = new Board();
-
 		static Scene scene() {
-			return BOARD.getScene();
+			return Board.getScene();
 		}
 	}
 
@@ -32,7 +30,7 @@ public final class ScreenFlows {
 		
 	}
 
-	public static void show(Stage stage, int id) {
+	public static void show(int id) {
 		Debug.log("'ScreenFlows.show': setting screen " + id);
 		String fileName = "";
 		switch (id) {
@@ -46,7 +44,7 @@ public final class ScreenFlows {
 				fileName = "/scenes/playerTwoEmpire.fxml";
 				break;
 			case 3:
-				stage.setScene(BoardForMenuPath.scene());
+				Main.primaryStage.setScene(BoardForMenuPath.scene());
 				return;
 			case 4:
 				fileName = "/scenes/chooseBattlefield.fxml";
@@ -62,7 +60,7 @@ public final class ScreenFlows {
 				Debug.error("FXML resource not found: " + fileName);
 				return;
 			}
-			stage.setScene(new Scene(FXMLLoader.load(resource)));
+			Main.primaryStage.setScene(new Scene(FXMLLoader.load(resource)));
 		} catch (IOException e) {
 			Debug.error(e);
 		}

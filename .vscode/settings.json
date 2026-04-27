@@ -17,5 +17,8 @@
     "editor.formatOnSave": false
   },
   "java.debug.settings.onBuildFailureProceed": true,
-    "editor.trimAutoWhitespace": false
+    "editor.trimAutoWhitespace": false,
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  }
 }

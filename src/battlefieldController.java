@@ -1,6 +1,5 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import ui.FxStages;
 import ui.MenuSelections;
 import ui.ScreenFlows;
 
@@ -8,7 +7,7 @@ public class battlefieldController {
 
 	private void chooseDifficulty(int difficulty, ActionEvent event) {
 		MenuSelections.setBattlefieldDifficulty(difficulty);
-		ScreenFlows.show(FxStages.stage(event), 3);
+		ScreenFlows.show(3);
 	}
 
 	@FXML

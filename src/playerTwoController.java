@@ -2,7 +2,6 @@ import core.GameManager;
 import core.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import ui.FxStages;
 import ui.MenuSelections;
 import ui.ScreenFlows;
 import utils.Debug;
@@ -13,7 +12,7 @@ public class playerTwoController {
 		Debug.log(2, "Player 2 chose " + empire);
 		MenuSelections.setPlayerTwoEmpire(empire);
 		GameManager.players[1] = new Player(1, empire);
-		ScreenFlows.show(FxStages.stage(event), 4);
+		ScreenFlows.show(4);
 	}
 
 	@FXML
