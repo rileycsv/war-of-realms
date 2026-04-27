@@ -1,5 +1,5 @@
 ## Functionality
-- [ ] Fix SQLite driver import
+- [ x ] Fix SQLite driver import
 
 ## Sprites
 - [ ] Make River sprites not have banks so they can be tiled vertically
