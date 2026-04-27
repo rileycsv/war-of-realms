@@ -8,3 +8,8 @@
 ## General Project
 - [ ] Update `README.md` project structure
 - [ ] Optional: Move JavaFX into `lib/` folder
+
+
+### Note:
+You can double click this to edit it. 
+Mark items complete by putting an 'x' in the brackets like so `- [x]`
