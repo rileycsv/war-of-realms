@@ -7,7 +7,8 @@
 
 ## General Project
 - [ ] Update `README.md` project structure
-- [ ] Optional: Move JavaFX into `lib/` folder
+- [x] Optional: Move JavaFX into `lib/` folder
+- [ ] Create `start.bat` file to start the application on any system without needing VS Code. 
 
 ## Random Stuff
 - [ ] Update 'ReadME' to describe sqlite driver installation
