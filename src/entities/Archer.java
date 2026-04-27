@@ -8,7 +8,7 @@ public class Archer extends Unit {
         super(PID, UID, kingdom, x, y);
         super.UNIT_TYPE = "archer.png";
         this.maxMovement = DatabaseIO.getValue("Archers", "Movement_Speed");
-        this.health = DatabaseIO.getValue("Archers", "UnitHealth");
+        this.health = DatabaseIO.getValue("Archers", "Unit_Health");
         this.attackDamage = 2;
         this.attackRange = DatabaseIO.getValue("Archers", "Attack_Range");
         this.currentHealth = health;
