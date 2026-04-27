@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 public class Main extends Application {
 	
 	public static Stage primaryStage;
-	private Board board = new Board();
 	
 	@Override
 	public void start(Stage stage) {
@@ -59,7 +58,7 @@ public class Main extends Application {
 			    break;
 			case 3:
 				// Set the scene to the game board
-				primaryStage.setScene(board.getScene());
+				primaryStage.setScene(Board.getScene());
 				// Exit the function early since no FXML file needs to be loaded
 				return;
 			case 4:

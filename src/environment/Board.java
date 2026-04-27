@@ -109,7 +109,7 @@ public class Board {
 	 * 
 	 * @return The constructed JavaFX Scene containing the interactive board.
 	 */
-	public Scene getScene() {
+	public static Scene getScene() {
 		// Initialize the canvas with the width and height of the board
 		canvas = new Canvas(CANVAS_W, CANVAS_H);
 		canvas.setFocusTraversable(true);
@@ -705,7 +705,7 @@ public class Board {
 	 * Calculates the middle tile of the current board layout and centers the camera
 	 * on it.
 	 */
-	private void centerCameraOnBoard() {
+	private static void centerCameraOnBoard() {
 		// Find the middle row and column
 		int midRow = getBoard().length / 2;
 		int midCol = getBoard()[0].length / 2;
