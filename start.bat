@@ -19,7 +19,7 @@ xcopy assets bin\assets /E /I /Y /D > nul
 echo.
 echo [4/5] Compiling Java files...
 :: Use the full path for javac.exe for JDK 25.0.2
-"C:\Program Files\Java\jdk-25.0.2\bin\javac.exe" -d bin -cp "src;.\lib\javafx-sdk-25.0.2\lib\*" --module-path ".\lib\javafx-sdk-25.0.2\lib\\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -sourcepath src @sources.txt
+"C:\Program Files\Java\jdk-25.0.2\bin\javac.exe" -d bin -cp "src;.\lib\javafx-sdk-25.0.2\lib\*;.\lib\sqlite-jdbc-3.32.3.2.jar" --module-path ".\lib\javafx-sdk-25.0.2\lib\\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -sourcepath src @sources.txt
 
 :: Check if the compilation was successful
 if %ERRORLEVEL% NEQ 0 (
@@ -31,6 +31,6 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo [5/5] Starting War of Realms...
-"C:\Program Files\Java\jdk-25.0.2\bin\java.exe" --module-path ".\lib\javafx-sdk-25.0.2\lib\\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -cp bin main.Main
+"C:\Program Files\Java\jdk-25.0.2\bin\java.exe" --enable-native-access=ALL-UNNAMED --module-path ".\lib\javafx-sdk-25.0.2\lib\\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -cp "bin;.\lib\sqlite-jdbc-3.32.3.2.jar" main.Main
 
 echo.
