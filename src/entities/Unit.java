@@ -29,6 +29,7 @@ public abstract class Unit {
 	// Game state stats (These fluctuate during gameplay)
 	protected int currentHealth;
 	protected int currentMovement;
+	protected boolean hasAttackedThisTurn = false;
 
 	// The unit's current grid position
 	protected int[] pos = {-1, -1}; // {row, col}
@@ -44,6 +45,14 @@ public abstract class Unit {
 		this.pos[1] = y;
 		// Sprite is NOT loaded here — UNIT_TYPE is set by the subclass constructor
 		// after super() returns, so loading here would always use "../debug.png".
+	}
+	
+	public boolean getHasAttackedThisTurn() {
+		return this.hasAttackedThisTurn;
+	}
+	
+	public void hasAttackedThisTurn() {
+		this.hasAttackedThisTurn = true;
 	}
 	
 	public int getAttackDamage() {
@@ -131,6 +140,7 @@ public abstract class Unit {
 	 */
 	public void endTurn() {
 		this.currentMovement = this.maxMovement;
+		this.hasAttackedThisTurn = false;
 	}
 
 	@Override

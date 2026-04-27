@@ -444,15 +444,19 @@ public class Board {
 				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getSelectedUnit().getPlayerID();
 				
 				if (isEnemy && GameManager.getUnitCanAttack()[row][col]) {
-					// Highlight red: Uses a flat lighting effect to safely tint the sprite red 
-					// without messing with its transparent background pixels.
+					// Highlight red: Uses a flat lighting effect to tint the sprite red without affecting transparent background pixels.
 					javafx.scene.effect.Lighting lighting = new javafx.scene.effect.Lighting();
 					javafx.scene.effect.Light.Distant light = new javafx.scene.effect.Light.Distant();
-					light.setColor(Color.rgb(255, 100, 100)); 
+					light.setColor(Color.rgb(245, 85, 85)); 
 					lighting.setLight(light);
 					lighting.setSurfaceScale(0.0); // Removes the 3D bump mapping
 					gc.setEffect(lighting);
-				} else if (!GameManager.getUnitCanMoveTo()[row][col] || isAlly) {
+				} else if (GameManager.getUnitCanMoveTo()[row][col] && (isAlly || isEnemy)) {
+					// Darken slightly less if the tile is occupied by an ally but is still reachable
+					ColorAdjust slightlyDarken = new ColorAdjust();
+					slightlyDarken.setBrightness(-0.3);
+					gc.setEffect(slightlyDarken);
+				} else if (!GameManager.getUnitCanMoveTo()[row][col]) {
 					// Darken slightly if the tile is unreachable OR occupied by an ally
 					ColorAdjust darken = new ColorAdjust();
 					darken.setBrightness(-0.5);

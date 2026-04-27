@@ -33,6 +33,10 @@ public class GameManager {
 	}
 	private static boolean[][] unitCanAttack = null;
 	public static boolean[][] getUnitCanAttack() {
+		if(selectedUnit.getHasAttackedThisTurn()) {
+			// If the unit has already attacked this turn, return a blank grid of false values
+			return new boolean[unitCanAttack.length][unitCanAttack[0].length]; 
+		}
 		return unitCanAttack;
 	}
 
@@ -58,6 +62,9 @@ public class GameManager {
 	 * @return The selected unit, or {@code null}.
 	 */
 	public static Unit getSelectedUnit() {
+		if (selectedUnit == null) {
+			Debug.log(3, "No unit currently selected");
+		}		
 		return selectedUnit;
 	}
 
@@ -249,15 +256,18 @@ public class GameManager {
 			return;
 		}
 		
+		if (selectedUnit.getHasAttackedThisTurn()) {
+			Debug.log(2, "Selected unit has already attacked this turn.");
+			return;
+		}
+		
 		// Deal damage to the defender
 		int damage = selectedUnit.getAttackDamage();
 		defender.receiveDamage(damage);
 		
 		// Unit can no longer move after attacking
+		selectedUnit.hasAttackedThisTurn();
 		selectedUnit.spendAllMovement();
-		
-		// End the turn automatically after an attack
-		endTurn(); 
 	}
 	
 	/**
