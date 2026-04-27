@@ -6,11 +6,11 @@ public class Archer extends Unit {
 
     public Archer(int PID, int UID, String kingdom, int x, int y) {
         super(PID, UID, kingdom, x, y);
-        super.UNIT_TYPE = "archer.png";
-        this.maxMovement = DatabaseIO.getValue(super.UNIT_TYPE, "movement");
-        this.health = DatabaseIO.getValue(super.UNIT_TYPE, "health");
-        this.attackDamage = DatabaseIO.getValue(super.UNIT_TYPE, "attackDamage");
-        this.attackRange = DatabaseIO.getValue(super.UNIT_TYPE, "attackRange");
+        super.UNIT_TYPE = "Archers";
+        this.maxMovement = DatabaseIO.getValue(super.Unit_Type, "Movement_Speed");
+        this.health = DatabaseIO.getValue(super.Unit_Type, "UnitHealth");
+        this.attackDamage = 2;
+        this.attackRange = DatabaseIO.getValue(super.Unit_Type, "Attack_Range");
         this.currentHealth = health;
         this.currentMovement = maxMovement;
     }
