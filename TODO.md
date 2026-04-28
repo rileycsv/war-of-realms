@@ -9,7 +9,7 @@
 ## General Project
 - [ ] Update `README.md` project structure
 - [x] Optional: Move JavaFX into `lib/` folder
-- [ ] Create `start.bat` file to start the application on any system without needing VS Code. 
+- [x] Create `start.bat` file to start the application on any system without needing VS Code. 
 
 ## Random Stuff
 - [ ] Update 'README' file tree
