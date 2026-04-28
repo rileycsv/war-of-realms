@@ -11,7 +11,7 @@
 - [ ] Create `start.bat` file to start the application on any system without needing VS Code. 
 
 ## Random Stuff
-- [ ] Update 'ReadME' to describe sqlite driver installation
+- [ ] Update 'README' file tree
 - [ x ] Copy and paste 'Scenes' into src so we don't have to manually do it everytime
 - [ ] Create a UML diagram
 
