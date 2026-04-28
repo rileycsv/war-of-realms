@@ -2,7 +2,7 @@
 - [ x ] Fix SQLite driver import
 
 ## Sprites / Cosmetic
-- [ ] Change river tile sprites to not have banks so they can be tiled vertically
+- [x] Change river tile sprites to not have banks so they can be tiled vertically
 - [ ] Optional: Fix bottom edges of sprites being not consistent lines, some sprites also have uneven top edges and stray white climps
 - [ ] Optional: Fix `Board.java` zooming in and out not being centered on screen
 
