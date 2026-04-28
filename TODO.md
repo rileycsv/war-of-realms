@@ -1,9 +1,10 @@
 ## Functionality
 - [ x ] Fix SQLite driver import
 
-## Sprites
-- [ ] Make River sprites not have banks so they can be tiled vertically
-- [ ] Optional: Fix bottom edges of sprites being not consistent lines
+## Sprites / Cosmetic
+- [ ] Change river tile sprites to not have banks so they can be tiled vertically
+- [ ] Optional: Fix bottom edges of sprites being not consistent lines, some sprites also have uneven top edges and stray white climps
+- [ ] Optional: Fix `Board.java` zooming in and out not being centered on screen
 
 ## General Project
 - [ ] Update `README.md` project structure
@@ -12,7 +13,7 @@
 
 ## Random Stuff
 - [ ] Update 'README' file tree
-- [ x ] Copy and paste 'Scenes' into src so we don't have to manually do it everytime
+- [x] Copy and paste 'Scenes' into src so we don't have to manually do it everytime
 - [ ] Create a UML diagram
 
 
