@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import entities.*;
 import environment.Board;
+import environment.Boards;
 import javafx.scene.paint.Color;
 
 /**
@@ -36,9 +37,13 @@ public class Player {
 		unitIDs.add(unitID);
 	}
 	
+	/**
+	 * Returns the total health of all units controlled by this player.
+	 * @return
+	 */
 	public int getTotalHealth() {
         int totalHealth = 0;
-        for (int unitID : unitIDs) { // Enhanced for-loop still works perfectly here
+        for (int unitID : unitIDs) { 
             Unit unit = GameManager.getUnitByID(unitID);
             if (unit != null) {
                 totalHealth += unit.getHealth();
@@ -52,18 +57,30 @@ public class Player {
 	}
 	
 	private int playerID = -1;
-
+	
+	/**
+	 * Initializes a new player with the given ID and chosen kingdom.
+	 * @param ID
+	 * @param kingdom
+	 */
 	public Player(int ID, String kingdom) {
 		this.playerID = ID;
 		this.kingdom = kingdom;
 	}
 	
+	/**
+	 * Returns the name of the kingdom this player has chosen.
+	 * @return
+	 */
 	public String getKingdom() {
 		return this.kingdom;
 	}
 	
+	/**
+	 * Resets all units controlled by this player at the end of their turn
+	 */
 	public void endTurn() {
-		for (Unit[] row : Board.getUnitsBoard()) {
+		for (Unit[] row : Boards.getUnitsBoard()) {
 			for (Unit unit : row) {
 				if (unit != null && unit.getPlayerID() == playerID) {
 					unit.endTurn();

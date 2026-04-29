@@ -1,11 +1,20 @@
 package environment;
+
+import entities.Unit;
+import environment.tile.Tile;
+import utils.Debug;
+
+/***
+ * Stores each of the game board as 2D character arrays
+ */
+
 public class Boards {
     /**
 	 * The predefined map layouts for the game.
 	 * Dimension 1: The Board ID (Level)
 	 * Dimension 2: Rows
 	 * Dimension 3: Columns
-	 * Legend:
+	 * Tile codes:
 	 * 'g' = Grass
 	 * 'm' = Mountain
 	 * 'r' = River
@@ -75,4 +84,57 @@ public class Boards {
             { 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm' }
         }
     };
+    
+	private static int CURRENT_BOARD = 2;
+
+    public static char[][] getActiveBoard() {
+        return board[CURRENT_BOARD];
+    }
+
+    public static void setActiveBoard(int index) {
+		UNITS_BOARD = new Unit[Boards.getActiveBoard().length][Boards.getActiveBoard()[0].length];
+        CURRENT_BOARD = index;
+    }
+
+    public static int[][] getActiveBoardCosts() {
+        final int[][] ret = new int[Boards.getActiveBoard().length][Boards.getActiveBoard()[0].length];
+		for (int r = 0; r < Boards.getActiveBoard().length; r++) {
+			for (int c = 0; c < Boards.getActiveBoard()[r].length; c++) {
+				int cost = getTileCost(r, c);
+				ret[r][c] = cost;
+			}
+		}
+		return ret;
+	}
+    
+	public static Unit getUnitAtTile(int row, int col) {
+		// Debug.log(3, "Getting unit at row=" + row + ", col=" + col + ": " + Boards.getUnitsBoard()[row][col]);
+		return UNITS_BOARD[row][col];
+	}
+    
+    /**
+	 * Returns the cost for a given tile
+	 * 
+	 * @param row The row position of the tile to get
+	 * @param col The column position of the tile to get
+	 * @return The cost of the tile
+	 */
+	private static int getTileCost(int row, int col) {
+		Tile tile = Board.getTileObject(row, col);
+		return tile != null ? tile.getCost() : 0;
+	}
+    
+    private static Unit[][] UNITS_BOARD = null;
+
+	public static Unit[][] getUnitsBoard() {
+		return UNITS_BOARD;
+	}
+
+	/**
+	 * Returns the tile at a given coordinate on the current board
+	 */
+	public static char getBoardTile(int r, int c) {
+		Debug.log(3, "Accessing tile at row=" + r + ", col=" + c);
+		return Boards.getActiveBoard()[r][c];
+	}
 }

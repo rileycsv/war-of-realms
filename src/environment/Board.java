@@ -1,5 +1,8 @@
 package environment;
 
+
+import java.util.Arrays;
+
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,28 +13,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import main.Main;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
-import javafx.scene.effect.Light;
 import javafx.scene.effect.Light.Distant;
 import javafx.scene.effect.Lighting;
 import javafx.geometry.Pos;
 
+import main.Main;
 import utils.Debug;
-
-import java.util.Arrays;
-
 import core.GameManager;
 import entities.Unit;
 import environment.tile.*;
 
-/**
- * Handles the visual rendering of the isometric game grid using JavaFX.
- * Responsibilities include:
- * - Translating screen coordinates to isometric grid coordinates.
- * - Managing camera zoom, panning, and event listeners.
- * - Rendering tiles and effects.
+/***
+ * Handles game board rendering and player input.
  */
 public class Board {
 	// Tile dimensions
@@ -39,65 +34,20 @@ public class Board {
 	private static final double FACE_H = 22.0;
 	private static final double SPRITE_H = 36.0;
 
-	// Canvas
+	// Canvas dimensions
 	private static final double CANVAS_W = 900;
 	private static final double CANVAS_H = 600;
 
-	// Origin: canvas XY of the TOP VERTEX of tile (row=0, col=0)
+	// The origina of the board in canvas coordinates. All tile positions are calculated relative to this point.
 	private static final double ORIGIN_X = CANVAS_W / 2.0;
 	private static final double ORIGIN_Y = 60.0;
-
-	/**
-	 * The index of the board currently being renderred
-	 */
-	private static int CURRENT_BOARD = 2;
-
-	public static void setActiveBoard(int index) {
-		CURRENT_BOARD = index;
-		UNITS_BOARD = new Unit[getBoard().length][getBoard()[0].length];
-		Debug.log(2, "Active board set to " + index + " with dimensions: " + getBoard().length + " rows x " + getBoard()[0].length + " cols");
-	}
-
-	private static Unit[][] UNITS_BOARD = null;
-
-	public static Unit[][] getUnitsBoard() {
-		return UNITS_BOARD;
-	}
-
-	/**
-	 * Returns the current board
-	 */
-	public static char[][] getBoard() {
-		// Debug.log(3, "Accessing board: " + CURRENT_BOARD);
-		return Boards.board[CURRENT_BOARD];
-	}
-
-	public static int[][] getBoardCosts() {
-		final int[][] ret = new int[getBoard().length][getBoard()[0].length];
-		for (int r = 0; r < getBoard().length; r++) {
-			for (int c = 0; c < getBoard()[r].length; c++) {
-				int cost = getTileCost(r, c);
-				ret[r][c] = cost;
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * Returns the tile at a given coordinate on the current board
-	 */
-	public static char getBoardTile(int r, int c) {
-		Debug.log(3, "Accessing tile at row=" + r + ", col=" + c);
-		return getBoard()[r][c];
-	}
 	
 	// Styles for the end turn button
 	private static String endTurnButtonStyle = "-fx-font-size: 16px; -fx-height: 100px; -fx-width: 100px; -fx-padding: 10px 20px; -fx-text-fill: white;";
-
-
+	
 	// Runtime state
 	private static Canvas canvas;
-
+	
 	// Camera & mouse state
 	// Defaulting closer to the center of the specific grid layout
 	private static double cameraX = ORIGIN_X;
@@ -122,8 +72,8 @@ public class Board {
 		canvas = new Canvas(CANVAS_W, CANVAS_H);
 		canvas.setFocusTraversable(true);
 		
-		if (UNITS_BOARD == null) {
-			setActiveBoard(CURRENT_BOARD); 
+		if (Boards.getUnitsBoard() == null) {
+			Boards.setActiveBoard(Boards.getActiveBoard().length / 2); // Default to the middle board if not set, which is usually the most balanced one
 		}
 
 		StackPane root = new StackPane(canvas);
@@ -142,7 +92,7 @@ public class Board {
 		// Bind canvas size to the root layout pane
 		canvas.widthProperty().bind(root.widthProperty());
 		canvas.heightProperty().bind(root.heightProperty());
-
+		
 		// Rerender the board anytime the canvas dimensions change
 		canvas.widthProperty().addListener((obs, oldVal, newVal) -> render());
 		canvas.heightProperty().addListener((obs, oldVal, newVal) -> render());
@@ -224,7 +174,7 @@ public class Board {
 			return;
 		}
 
-		Unit unitAtTile = getUnitAtTile(clickedTile[0], clickedTile[1]);
+		Unit unitAtTile = Boards.getUnitAtTile(clickedTile[0], clickedTile[1]);
 
 		// Setup phase: unit placement only — no selection or movement allowed
 		if (GameManager.isSetupTurn()) {
@@ -232,8 +182,8 @@ public class Board {
 				for (Unit unit : GameManager.getActivePlayer().getUnits(clickedTile[0], clickedTile[1])) {
 					if (unit == null) continue;
 					int r = unit.getX(), c = unit.getY();
-					if (r >= 0 && r < UNITS_BOARD.length && c >= 0 && c < UNITS_BOARD[0].length) {
-						UNITS_BOARD[r][c] = unit;
+					if (r >= 0 && r < Boards.getUnitsBoard().length && c >= 0 && c < Boards.getUnitsBoard()[0].length) {
+						Boards.getUnitsBoard()[r][c] = unit;
 					}
 				}
 				GameManager.endTurn();
@@ -252,9 +202,9 @@ public class Board {
 			canMove = selected != null && selected.canMoveToTile(clickedTile[0], clickedTile[1]);
 			
 			if (canMove) {
-				UNITS_BOARD[selected.getX()][selected.getY()] = null;
+				Boards.getUnitsBoard()[selected.getX()][selected.getY()] = null;
 				GameManager.moveUnit(selected, clickedTile[0], clickedTile[1]);
-				UNITS_BOARD[clickedTile[0]][clickedTile[1]] = selected;
+				Boards.getUnitsBoard()[clickedTile[0]][clickedTile[1]] = selected;
 				selected.spendAllMovement();
 				GameManager.clearSelection();
 			} else {
@@ -359,7 +309,7 @@ public class Board {
 		gc.translate(-cameraX, -cameraY);
 		
 		// Build highlight maps once per frame from the selected unit
-		char[][] board = getBoard();
+		char[][] board = Boards.getActiveBoard();
 		int rows = board.length;
 		int cols = board[0].length;
 		
@@ -404,7 +354,7 @@ public class Board {
 				int rMaxUnit = Math.min(unitDiag, rows - 1);
 				for (int r = rMinUnit; r <= rMaxUnit; r++) {
 					int c = unitDiag - r;
-					Unit unitHere = getUnitAtTile(r, c);
+					Unit unitHere = Boards.getUnitAtTile(r, c);
 					if (unitHere != null) {
 						drawUnit(gc, unitHere);
 					}
@@ -454,13 +404,13 @@ public class Board {
 			gc.save();
 			clipToTopFace(gc, top);
 			
-			Color baseColor = fallbackColor(getBoard()[row][col]);
+			Color baseColor = fallbackColor(Boards.getActiveBoard()[row][col]);
 			
 			// Apply color adjustments for fallback polygons
 			if (row == hoverRow && col == hoverCol) {
 				baseColor = baseColor.deriveColor(0, 1, 1.3, 1);
 			} else if (GameManager.getSelectedUnit() != null && !GameManager.isSetupTurn()) {
-				Unit unitAtTile = getUnitAtTile(row, col);
+				Unit unitAtTile = Boards.getUnitAtTile(row, col);
 				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != GameManager.getSelectedUnit().getPlayerID();
 				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getSelectedUnit().getPlayerID();
 
@@ -486,7 +436,7 @@ public class Board {
 		Unit selectedUnit = GameManager.getSelectedUnit();
 
 		if (selectedUnit != null && !GameManager.isSetupTurn()) {
-			Unit unitAtTile  = getUnitAtTile(row, col);
+			Unit unitAtTile  = Boards.getUnitAtTile(row, col);
 			boolean isEnemy  = unitAtTile != null && unitAtTile.getPlayerID() != selectedUnit.getPlayerID();
 			boolean isAlly   = unitAtTile != null && unitAtTile.getPlayerID() == selectedUnit.getPlayerID();
 			boolean canAttack  = GameManager.getUnitCanAttack()[row][col];
@@ -611,7 +561,7 @@ public class Board {
 	 * @return
 	 */
 	public static Tile getTileObject(int row, int col) {
-		return switch (getBoard()[row][col]) {
+		return switch (Boards.getActiveBoard()[row][col]) {
 			case 'g' -> GRASS_TILE;
 			case 'f' -> FOREST_TILE;
 			case 'm' -> MOUNTAIN_TILE;
@@ -619,18 +569,6 @@ public class Board {
 			case 'v' -> VOID_TILE;
 			default -> null;
 		};
-	}
-
-	/**
-	 * Returns the cost for a given tile
-	 * 
-	 * @param row The row position of the tile to get
-	 * @param col The column position of the tile to get
-	 * @return The cost of the tile
-	 */
-	private static int getTileCost(int row, int col) {
-		Tile tile = getTileObject(row, col);
-		return tile != null ? tile.getCost() : 0;
 	}
 
 	/**
@@ -671,7 +609,7 @@ public class Board {
 		int c = (int) Math.floor(colF);
 
 		// Bounds check
-		if (r < 0 || r >= getBoard().length || c < 0 || c >= getBoard()[0].length) {
+		if (r < 0 || r >= Boards.getActiveBoard().length || c < 0 || c >= Boards.getActiveBoard()[0].length) {
 			return new int[] { -1, -1 };
 		}
 
@@ -713,15 +651,10 @@ public class Board {
 	 */
 	private static void centerCameraOnBoard() {
 		// Find the middle row and column
-		int midRow = getBoard().length / 2;
-		int midCol = getBoard()[0].length / 2;
+		int midRow = Boards.getActiveBoard().length / 2;
+		int midCol = Boards.getActiveBoard()[0].length / 2;
 
 		centerCameraOnTile(midRow, midCol);
-	}
-
-	public static Unit getUnitAtTile(int row, int col) {
-		// Debug.log(3, "Getting unit at row=" + row + ", col=" + col + ": " + UNITS_BOARD[row][col]);
-		return UNITS_BOARD[row][col];
 	}
 	
 	/**
@@ -737,13 +670,13 @@ public class Board {
 			int newX = x + dir[0];
 			int newY = y + dir[1];
 			
-			if (newX < 0 || newX >= getBoard().length || newY < 0 || newY >= getBoard()[0].length) {
+			if (newX < 0 || newX >= Boards.getActiveBoard().length || newY < 0 || newY >= Boards.getActiveBoard()[0].length) {
 				Debug.log(2, "Space not clear around row=" + x + ", col=" + y + " because adjacent tile at row=" + newX + ", col=" + newY + " is outside of the board boundaries.");
 				return false;
 			}
 			
-			if (UNITS_BOARD[newX][newY] != null) {
-				Debug.log(2, "Cannot place unit at row=" + x + ", col=" + y + " because adjacent tile at row=" + newX + ", col=" + newY + " is occupied by unit: " + UNITS_BOARD[newX][newY]);
+			if (Boards.getUnitsBoard()[newX][newY] != null) {
+				Debug.log(2, "Cannot place unit at row=" + x + ", col=" + y + " because adjacent tile at row=" + newX + ", col=" + newY + " is occupied by unit: " + Boards.getUnitsBoard()[newX][newY]);
 				return false; // Found a unit in an adjacent tile
 			} 
 		}

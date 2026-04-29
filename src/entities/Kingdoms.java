@@ -3,6 +3,7 @@ package entities;
 import java.util.Arrays;
 
 import environment.Board;
+import environment.Boards;
 import utils.Debug;
 
 public class Kingdoms {
@@ -45,8 +46,8 @@ public class Kingdoms {
 		// Loop through the unit counts and instantiate them at the correct positions
 		for (int type = 0; type < unitCounts.length; type++) {
 			for (int i = 0; i < unitCounts[type]; i++) {
-				int rows = Board.getBoard().length;
-				int cols = Board.getBoard()[0].length;
+				int rows = Boards.getActiveBoard().length;
+				int cols = Boards.getActiveBoard()[0].length;
 				int x = Math.max(0, Math.min(rows - 1, cPos[0] + positions[posIndex][0]));
 				int y = Math.max(0, Math.min(cols - 1, cPos[1] + positions[posIndex][1]));
 				

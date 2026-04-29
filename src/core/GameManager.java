@@ -2,6 +2,7 @@ package core;
 
 import entities.*;
 import environment.Board;
+import environment.Boards;
 import utils.Debug;
 
 /**
@@ -88,7 +89,7 @@ public class GameManager {
 	 * @return The unit at {@code (row, col)}, or {@code null} if unoccupied.
 	 */
 	public static Unit getUnitAtTile(int row, int col) {
-		return Board.getUnitAtTile(row, col);
+		return Boards.getUnitAtTile(row, col);
 	}
 
 	/**
@@ -245,8 +246,8 @@ public class GameManager {
 	}
 
 	public static void moveUnit(Unit unit, int row, int col) {
-		Board.getUnitsBoard()[unit.getX()][unit.getY()] = null; // Clear the unit's current position on the board
-		Board.getUnitsBoard()[row][col] = unit; 
+		Boards.getUnitsBoard()[unit.getX()][unit.getY()] = null; // Clear the unit's current position on the board
+		Boards.getUnitsBoard()[row][col] = unit; 
 		unit.setPos(row, col); // Update the unit's internal position
 	}
 	
@@ -279,14 +280,14 @@ public class GameManager {
 		int x = unit.getX();
 		int y = unit.getY();
 		
-		if (Board.getUnitAtTile(x, y) != null && Board.getUnitAtTile(x, y).getUnitID() == unit.getUnitID()) {
-			Board.getUnitsBoard()[x][y] = null; 
+		if (Boards.getUnitAtTile(x, y) != null && Boards.getUnitAtTile(x, y).getUnitID() == unit.getUnitID()) {
+			Boards.getUnitsBoard()[x][y] = null; 
 			Debug.log(2, "Unit removed: " + unit);
 		}
 
 		// 2. Check if the player has any units left
 		boolean hasUnitsLeft = false;
-		for (Unit[] row : Board.getUnitsBoard()) {
+		for (Unit[] row : Boards.getUnitsBoard()) {
 			for (Unit u : row) {
 				if (u != null && u.getPlayerID() == unit.getPlayerID()) {
 					hasUnitsLeft = true;
@@ -303,9 +304,9 @@ public class GameManager {
 	}
 	
 	public static Unit getUnitByID(int unitID) {
-		for (int i = 0; i < Board.getUnitsBoard().length; i++) {
-			for (int j = 0; j < Board.getUnitsBoard()[0].length; j++) {
-				Unit unit = Board.getUnitAtTile(i, j);
+		for (int i = 0; i < Boards.getUnitsBoard().length; i++) {
+			for (int j = 0; j < Boards.getUnitsBoard()[0].length; j++) {
+				Unit unit = Boards.getUnitAtTile(i, j);
 				if (unit != null && unit.getUnitID() == unitID) {
 					return unit;
 				}

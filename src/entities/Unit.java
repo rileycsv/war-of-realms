@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import core.GameManager;
 import environment.Board;
+import environment.Boards;
 import javafx.scene.image.Image;
 import utils.Debug;
 
@@ -158,8 +159,8 @@ public abstract class Unit {
 		if (Debug.isEnabled() && debugInstakillOnClick) {
 			receiveDamage(10);; // Temporary hack to test unit death and removal from board
 		}
-		char[][] board = Board.getBoard();
-		int[][] boardCosts = Board.getBoardCosts();
+		char[][] board = Boards.getActiveBoard();
+		int[][] boardCosts = Boards.getActiveBoardCosts();
 		int rows = board.length;
 		int cols = board[0].length;
 		
@@ -210,7 +211,7 @@ public abstract class Unit {
 	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
 	 */
 	public boolean[][] canAttack() {
-		char[][] board = Board.getBoard();
+		char[][] board = Boards.getActiveBoard();
 		int rows = board.length;
 		int cols = board[0].length;
 		

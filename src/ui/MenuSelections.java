@@ -1,6 +1,7 @@
 package ui;
 
 import environment.Board;
+import environment.Boards;
 
 /**
  * Holds choices made in FXML menus until core types expose setters or the game
@@ -38,7 +39,7 @@ public final class MenuSelections {
 	public static void setBattlefieldDifficulty(int difficulty) {
 		if (difficulty >= 0 && difficulty <= 2) {
 			battlefieldDifficulty = difficulty;
-			Board.setActiveBoard(difficulty);
+			Boards.setActiveBoard(difficulty);
 		}
 	}
 }
