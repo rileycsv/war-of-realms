@@ -14,7 +14,7 @@
 ## Random Stuff
 - [ ] Update 'README' file tree
 - [x] Copy and paste 'Scenes' into src so we don't have to manually do it everytime
-- [ ] Create a UML diagram
+- [x] Create a UML diagram
 
 
 ### Note:
