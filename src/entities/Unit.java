@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import core.GameManager;
-import environment.Board;
 import environment.Boards;
 import javafx.scene.image.Image;
 import utils.Debug;

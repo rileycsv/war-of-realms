@@ -2,7 +2,6 @@ package entities;
 
 import java.util.Arrays;
 
-import environment.Board;
 import environment.Boards;
 import utils.Debug;
 

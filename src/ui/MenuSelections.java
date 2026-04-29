@@ -1,6 +1,5 @@
 package ui;
 
-import environment.Board;
 import environment.Boards;
 
 /**

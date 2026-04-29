@@ -3,7 +3,6 @@ package core;
 import java.util.ArrayList;
 
 import entities.*;
-import environment.Board;
 import environment.Boards;
 import javafx.scene.paint.Color;
 
