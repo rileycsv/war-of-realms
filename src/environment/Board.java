@@ -8,12 +8,20 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import main.Main;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Light.Distant;
+import javafx.scene.effect.Lighting;
 import javafx.geometry.Pos;
 
 import utils.Debug;
+
+import java.util.Arrays;
+
 import core.GameManager;
 import entities.Unit;
 import environment.tile.*;
@@ -382,10 +390,8 @@ public class Board {
 				int rMax = Math.min(diag, rows - 1);
 				for (int r = rMin; r <= rMax; r++) {
 					int c = diag - r;
-					// UPDATED: Pass the highlight arrays and the selected unit down to drawTile
-					drawTile(gc, r, c);
-					// UPDATED: drawTileHighlight now only handles the yellow selection indicator
-					drawTileHighlight(gc, r, c, selected); 
+					// Pass the highlight arrays and the selected unit down to drawTile
+					drawTile(gc, r, c);	
 				}
 			}
 			
@@ -434,44 +440,11 @@ public class Board {
 			}
 			
 			// --- SPRITE TINTING & SHADING LOGIC ---
-			if (row == hoverRow && col == hoverCol) {
-				ColorAdjust highlight = new ColorAdjust();
-				highlight.setBrightness(0.3);
-				gc.setEffect(highlight);
-			} else if (GameManager.getSelectedUnit() != null && !GameManager.isSetupTurn()) {
-				Unit unitAtTile = getUnitAtTile(row, col);
-				boolean isEnemy = unitAtTile != null && unitAtTile.getPlayerID() != GameManager.getSelectedUnit().getPlayerID();
-				boolean isAlly = unitAtTile != null && unitAtTile.getPlayerID() == GameManager.getSelectedUnit().getPlayerID();
-				
-				if (isEnemy && GameManager.getUnitCanAttack()[row][col]) {
-					// Highlight red: Uses a flat lighting effect to tint the sprite red without affecting transparent background pixels.
-					javafx.scene.effect.Lighting lighting = new javafx.scene.effect.Lighting();
-					javafx.scene.effect.Light.Distant light = new javafx.scene.effect.Light.Distant();
-					light.setColor(Color.rgb(245, 85, 85)); 
-					lighting.setLight(light);
-					lighting.setSurfaceScale(0.0); // Removes the 3D bump mapping
-					gc.setEffect(lighting);
-				} else if (GameManager.getUnitCanMoveTo()[row][col] && (isAlly || isEnemy)) {
-					// Darken slightly less if the tile is occupied by an ally but is still reachable
-					ColorAdjust slightlyDarken = new ColorAdjust();
-					slightlyDarken.setBrightness(-0.3);
-					gc.setEffect(slightlyDarken);
-				} else if (!GameManager.getUnitCanMoveTo()[row][col]) {
-					// Darken slightly if the tile is unreachable OR occupied by an ally
-					ColorAdjust darken = new ColorAdjust();
-					darken.setBrightness(-0.5);
-					gc.setEffect(darken);
-				} else {
-					// Normal state (Reachable empty tiles remain their natural color)
-					gc.setEffect(null);
-				}
-			} else {
-				gc.setEffect(null);
-			}
+			gc.setEffect(resolveTileEffect(row, col));
 
 			gc.drawImage(img, drawX, drawY, imgW, imgH);
-			gc.setEffect(null); // Always clear the effect after drawing!
-
+			gc.setEffect(null); // Always clear the effect after drawing
+			
 		} else {
 			Debug.log(2, "Using fallback polygon for tile at row=" + row + ", col=" + col);
 			// Fallback uses the standard hardcoded dimensions
@@ -505,36 +478,65 @@ public class Board {
 	}
 	
 	/**
-	 * Draws a semi-transparent yellow overlay on a tile to indicate 
-	 * the currently selected unit's position.
+	 * Resolves the visual effect to apply to a tile sprite based on game state.
+	 * Conditions are evaluated in descending priority order.
+	 * Returns null for no effect (normal/natural rendering).
 	 */
-	private static void drawTileHighlight(GraphicsContext gc, int row, int col, Unit selected) {
-		if (selected != null && selected.getX() == row && selected.getY() == col) {
-			double[] top = tileTopPoint(row, col);
-			double hw = TILE_W / 2.0;
-			double hh = FACE_H / 2.0;
+	private static Effect resolveTileEffect(int row, int col) {
+		Unit selectedUnit = GameManager.getSelectedUnit();
 
-			gc.save();
+		if (selectedUnit != null && !GameManager.isSetupTurn()) {
+			Unit unitAtTile  = getUnitAtTile(row, col);
+			boolean isEnemy  = unitAtTile != null && unitAtTile.getPlayerID() != selectedUnit.getPlayerID();
+			boolean isAlly   = unitAtTile != null && unitAtTile.getPlayerID() == selectedUnit.getPlayerID();
+			boolean canAttack  = GameManager.getUnitCanAttack()[row][col];
+			boolean canMoveTo  = GameManager.getUnitCanMoveTo()[row][col];
+			boolean isSelectedTile = Arrays.equals(selectedUnit.getPos(), new int[]{row, col});
 
-			// Clip to the diamond face so the overlay doesn't bleed
-			gc.beginPath();
-			gc.moveTo(top[0], top[1]);
-			gc.lineTo(top[0] + hw, top[1] + hh);
-			gc.lineTo(top[0], top[1] + FACE_H);
-			gc.lineTo(top[0] - hw, top[1] + hh);
-			gc.closePath();
-			gc.clip();
-
-			gc.setFill(new Color(1.0, 1.0, 0.0, 0.45)); // Yellow: selected unit
-			gc.fillRect(top[0] - hw, top[1], TILE_W, FACE_H);
-
-			gc.restore();
+			if (isSelectedTile)				  		return tintBrightness(0.5);   // Selected unit tile: lighten
+			if (canAttack && isEnemy)				return tintTile(Color.rgb(245, 85, 85)); // Attackable tile: red
+			if (canMoveTo && (isAlly || isEnemy)) 	return tintBrightness(-0.3);  // Reachable but occupied: slight darken
+			if (!canMoveTo)							return tintBrightness(-0.5);  // Unreachable tile: darken
+			
+			return null;															// Reachable empty: no effect
 		}
+
+		if (row == hoverRow && col == hoverCol)	{
+			return tintBrightness(0.3);   // Hover highlight (no unit selected)
+		}
+
+		return null;
+	}
+	
+	/**
+	 * Returns a ColorAdjust effect that tints the tile by the given brightness amount
+	 * @param brightness
+	 * @return
+	 */
+	private static ColorAdjust tintBrightness(double brightness) {
+		ColorAdjust effect = new ColorAdjust();
+		effect.setBrightness(brightness);
+		return effect;
+	}
+
+	/**
+	 * Returns a Lighting effect that tints the tile with the given color
+	 * @param tintColor
+	 * @return
+	 */
+	private static Lighting tintTile(Color tintColor) {
+		Distant light = new Distant();
+		light.setColor(tintColor);
+
+		Lighting lighting = new Lighting();
+		lighting.setLight(light);
+		lighting.setSurfaceScale(0.0); // 0.0 = flat, no bump mapping
+		return lighting;
 	}
 	
 	/**
 	 * Draws a unit on top of the tile, handling sprite alignment based on the
-	 * tile's top vertex and the unit sprite's dimensions.
+	 * tile's top edge and the unit sprite's dimensions.
 	 */
 	public static void drawUnit(GraphicsContext gc, Unit unit) {
 		double[] top = tileTopPoint(unit.getX(), unit.getY()); // getX = row, getY = col
@@ -753,7 +755,7 @@ public class Board {
 	 * Creates and displays a popup over the board when one player remains alive. 
 	 */
 	public static void showEndGameScreen() {
-		StackPane popup = new StackPane();
+		VBox popup = new VBox();
 		popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 40px; -fx-border-radius: 10px;");
 		popup.setAlignment(Pos.CENTER);
 		

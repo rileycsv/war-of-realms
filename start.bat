@@ -34,3 +34,4 @@ echo [5/5] Starting War of Realms...
 "C:\Program Files\Java\jdk-25.0.2\bin\java.exe" --enable-native-access=ALL-UNNAMED --module-path ".\lib\javafx-sdk-25.0.2\lib\\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -cp "bin;.\lib\sqlite-jdbc-3.32.3.2.jar" main.Main
 
 echo.
+exit /b 1
