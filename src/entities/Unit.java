@@ -121,8 +121,6 @@ public abstract class Unit {
 	 * player's kingdom.
 	 * IMPORTANT: This assumes a specific file structure:
 	 * /assets/kingdoms/{kingdomName}/{UNIT_TYPE}
-	 *
-	 * @return The file path string for the sprite image.
 	 */
 	public String getSpritePath() {
 		return String.format("file:assets/kingdoms/%s/%s", kingdom.toLowerCase(), UNIT_TYPE);
@@ -151,7 +149,7 @@ public abstract class Unit {
 	/**
 	 * Determines what tiles a unit can move to based on its current movement points and the terrain costs.
 	 * Uses a BFS flood fill algorithm to explore reachable tiles.
-	 * @return
+	 * Returns a boolean array where each index represents a tile on the board, and the value is true if the unit can move to that tile, false otherwise.
 	 */
 	public boolean[][] canMoveTo() {
 		boolean debugInstakillOnClick = false; // Set to true to test unit death and removal from board
@@ -207,7 +205,7 @@ public abstract class Unit {
 	/**
 	 * Determines what tiles a unit can attack based on its attack range.
 	 * Uses a BFS flood fill algorithm to explore tiles within attack range.
-	 * @return A boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
+	 * Returns a boolean array where each index represents a tile on the board, and the value is true if the unit can attack that tile, false otherwise.
 	 */
 	public boolean[][] canAttack() {
 		char[][] board = Boards.getActiveBoard();
