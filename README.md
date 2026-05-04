@@ -30,7 +30,7 @@ C:\Program Files\Java\jdk-25.0.2\
 
 1. Open the `war-of-realms` folder in Windows Explorer
 2. Locate `start.bat` in the project root folder
-3. Double the file to run `start.bat`
+3. Double click the file to run `start.bat`
 
 The script will automatically compile all source files and start the game's main method.
 
