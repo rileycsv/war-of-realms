@@ -13,13 +13,13 @@ A turn-based strategy game built with Java and JavaFX. Two players take turns mo
 
 ## Prerequisites
 
-You need three things installed before you can run the project.
+You need one thing installed before you can run the project.
 
 ### 1. JDK 25.0.2
 
 Download from: https://www.oracle.com/java/technologies/javase/jdk25-archive-downloads.html
 
-Install it to the default location. On Windows this will be something like:
+Install it to the default location. On Windows this should be:
 ```
 C:\Program Files\Java\jdk-25.0.2\
 ```
