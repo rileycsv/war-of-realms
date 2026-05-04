@@ -41,7 +41,7 @@ public class Main extends Application {
 	
 	/**
      * Swaps out the current view scene in the main window.
-     * @param id The ID of the screen to display (0 = Active Game Board).
+     * id = The ID of the screen to display (0 = Active Game Board).
      */
 	public void setScreen(int id) {
 		Debug.log("'setScreen': setting screen " + id);
