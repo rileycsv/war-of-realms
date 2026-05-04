@@ -115,9 +115,9 @@ public class Boards {
     /**
 	 * Returns the cost for a given tile
 	 * 
-	 * @param row The row position of the tile to get
-	 * @param col The column position of the tile to get
-	 * @return The cost of the tile
+	 * row = The row position of the tile to get
+	 * col = The column position of the tile to get
+	 * Returns the cost of the tile
 	 */
 	private static int getTileCost(int row, int col) {
 		Tile tile = Board.getTileObject(row, col);
