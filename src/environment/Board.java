@@ -64,8 +64,6 @@ public class Board {
 	/**
 	 * Initializes the canvas, sets up input listeners for mouse and keyboard,
 	 * and returns the constructed scene.
-	 * 
-	 * @return The constructed JavaFX Scene containing the interactive board.
 	 */
 	public static Scene getScene() {
 		// Initialize the canvas with the width and height of the board
@@ -251,9 +249,9 @@ public class Board {
 	 * Translates raw window/screen coordinates into absolute world coordinates,
 	 * accounting for current camera pan and zoom levels.
 	 * 
-	 * @param cx The x position on the screen
-	 * @param cy The y position on the screen
-	 * @return An array containing [WorldX, WorldY]
+	 * cx = The x position on the screen
+	 * cy = The y position on the screen
+	 * Returns an array containing [WorldX, WorldY]
 	 */
 	private static double[] screenToWorld(double cx, double cy) {
 		// Perfectly mirrors the new render() translations/scaling
@@ -368,9 +366,9 @@ public class Board {
 	/**
 	 * Draws a tile, handles positioning of differently sized tile sprites
 	 * 
-	 * @param gc  The Graphics Context to draw to
-	 * @param row The row of the tile
-	 * @param col The column of the tile
+	 * gc = The Graphics Context to draw to
+	 * row = The row of the tile
+	 * col = The column of the tile
 	 */
 	private static void drawTile(GraphicsContext gc, int row, int col) {
 		double[] top = tileTopPoint(row, col);
@@ -460,8 +458,6 @@ public class Board {
 	
 	/**
 	 * Returns a ColorAdjust effect that tints the tile by the given brightness amount
-	 * @param brightness
-	 * @return
 	 */
 	private static ColorAdjust tintBrightness(double brightness) {
 		ColorAdjust effect = new ColorAdjust();
@@ -471,8 +467,6 @@ public class Board {
 
 	/**
 	 * Returns a Lighting effect that tints the tile with the given color
-	 * @param tintColor
-	 * @return
 	 */
 	private static Lighting tintTile(Color tintColor) {
 		Distant light = new Distant();
@@ -530,9 +524,9 @@ public class Board {
 	/**
 	 * Returns the image for a given tile
 	 * 
-	 * @param row The row position of the tile to get
-	 * @param col The column position of the tile to get
-	 * @return The image of the tile
+	 * row = The row position of the tile to get
+	 * col = The column position of the tile to get
+	 * Returns the image of the tile
 	 */
 	private static Image getTile(int row, int col) {
 		Tile tile = getTileObject(row, col);
@@ -555,10 +549,7 @@ public class Board {
 	}
 	
 	/**
-	 * Returns the tile object for a given tile coordinate.
-	 * @param row
-	 * @param col
-	 * @return
+	 * Returns the tile object for a given tile coordinate
 	 */
 	public static Tile getTileObject(int row, int col) {
 		return switch (Boards.getActiveBoard()[row][col]) {
@@ -584,9 +575,9 @@ public class Board {
 	/**
 	 * Converts the absolute world coordinates to the coordinates on the board grid.
 	 * 
-	 * @param worldX The absolute x position in the world
-	 * @param worldY The absolute y position in the world
-	 * @return An array containing [row, col], or [-1, -1] if out of bounds.
+	 * worldX = The absolute x position in the world
+	 * worldY = The absolute y position in the world
+	 * Returns an array containing [row, col], or [-1, -1] if out of bounds.
 	 */
 	public static int[] canvasToTile(double worldX, double worldY) {
 		double hw = TILE_W / 2.0;
@@ -634,8 +625,8 @@ public class Board {
 	/**
 	 * Instantly moves the camera to center on a specific grid tile.
 	 * 
-	 * @param x The row coordinate
-	 * @param y The col coordinate
+	 * x = The row coordinate
+	 * y = The col coordinate
 	 */
 	private static void centerCameraOnTile(int x, int y) {
 		double[] centerPt = tileTopPoint(x, y);
@@ -659,9 +650,6 @@ public class Board {
 	
 	/**
 	 * Returns true if there are no units on the 8 tiles surrounding the given tile coordinates.
-	 * @param x
-	 * @param y
-	 * @return
 	 */
 	public static boolean spaceClearAroundTile(int x, int y) {
 		int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
