@@ -38,7 +38,6 @@ public class Player {
 	
 	/**
 	 * Returns the total health of all units controlled by this player.
-	 * @return
 	 */
 	public int getTotalHealth() {
         int totalHealth = 0;
@@ -59,8 +58,6 @@ public class Player {
 	
 	/**
 	 * Initializes a new player with the given ID and chosen kingdom.
-	 * @param ID
-	 * @param kingdom
 	 */
 	public Player(int ID, String kingdom) {
 		this.playerID = ID;
@@ -69,7 +66,6 @@ public class Player {
 	
 	/**
 	 * Returns the name of the kingdom this player has chosen.
-	 * @return
 	 */
 	public String getKingdom() {
 		return this.kingdom;
