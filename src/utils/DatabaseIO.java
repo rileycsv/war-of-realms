@@ -11,7 +11,7 @@ public class DatabaseIO {
       NOTE:
       The only available inputs for 'unitName' are:
       -Archers
-      -Pikement
+      -Pikemen
       -Cavalry
       -Infantry
       
