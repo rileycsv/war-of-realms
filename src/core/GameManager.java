@@ -8,16 +8,16 @@ import utils.Debug;
 /**
  * Global tracker for the current state of the game.
  *
- * <p>GameManager is a static utility class — all fields and methods are static
+ * GameManager is a static utility class — all fields and methods are static
  * because there is only ever one game running at a time. It is responsible for:
- * <ul>
- *   <li>Tracking whose turn it is and advancing turns</li>
- *   <li>Detecting the setup phase (negative turn count)</li>
- *   <li>Querying the board for units by tile position</li>
- *   <li>Maintaining the currently selected unit</li>
- * </ul>
+ * 
+ *   Tracking whose turn it is and advancing turns
+ *   Detecting the setup phase (negative turn count)
+ *   Querying the board for units by tile position
+ *   Maintaining the currently selected unit
+ * 
  *
- * <p>Turn numbering starts at {@code -players.length} so that each player gets
+ * Turn numbering starts at {@code -players.length} so that each player gets
  * one "setup turn" before normal gameplay begins. Once the count reaches 0 the
  * game is live.
  */
@@ -48,7 +48,7 @@ public class GameManager {
 	/**
 	 * Sets the unit that the active player has selected.
 	 *
-	 * @param unit The unit to select.
+	 * unit = The unit to select.
 	 */
 	public static void setSelectedUnit(Unit unit) {
 		unitCanMoveTo = unit.canMoveTo();
@@ -59,8 +59,6 @@ public class GameManager {
 
 	/**
 	 * Returns the currently selected unit, or {@code null} if nothing is selected.
-	 *
-	 * @return The selected unit, or {@code null}.
 	 */
 	public static Unit getSelectedUnit() {
 		if (selectedUnit == null) {
@@ -84,9 +82,8 @@ public class GameManager {
 	/**
 	 * Returns the unit occupying a given tile, or {@code null} if the tile is empty.
 	 *
-	 * @param row The row of the tile to check.
-	 * @param col The column of the tile to check.
-	 * @return The unit at {@code (row, col)}, or {@code null} if unoccupied.
+	 * row = The row of the tile to check.
+	 * col = The column of the tile to check.
 	 */
 	public static Unit getUnitAtTile(int row, int col) {
 		return Boards.getUnitAtTile(row, col);
@@ -95,9 +92,8 @@ public class GameManager {
 	/**
 	 * Returns {@code true} if any unit (ally or enemy) occupies the given tile.
 	 *
-	 * @param row The row to check.
-	 * @param col The column to check.
-	 * @return {@code true} if the tile is occupied.
+	 * row = The row to check.
+	 * col = The column to check.
 	 */
 	public static boolean isTileBlocked(int row, int col) {
 		return getUnitAtTile(row, col) != null;
@@ -107,10 +103,9 @@ public class GameManager {
 	 * Returns {@code true} if an enemy unit (a unit belonging to a different player
 	 * than {@code unit}) occupies the given tile.
 	 *
-	 * @param row  The row to check.
-	 * @param col  The column to check.
-	 * @param unit The reference unit used to determine ownership.
-	 * @return {@code true} if the tile holds an enemy of {@code unit}.
+	 * row =  The row to check.
+	 * col =  The column to check.
+	 * unit = The reference unit used to determine ownership.
 	 */
 	public static boolean isEnemyAtTile(int row, int col, Unit unit) {
 		Unit blocker = getUnitAtTile(row, col);
@@ -121,10 +116,9 @@ public class GameManager {
 	 * Returns {@code true} if an allied unit (a unit belonging to the same player
 	 * as {@code unit}) occupies the given tile.
 	 *
-	 * @param row  The row to check.
-	 * @param col  The column to check.
-	 * @param unit The reference unit used to determine ownership.
-	 * @return {@code true} if the tile holds an ally of {@code unit}.
+	 * row =  The row to check.
+	 * col =  The column to check.
+	 * unit = The reference unit used to determine ownership.
 	 */
 	public static boolean isAllyAtTile(int row, int col, Unit unit) {
 		Unit blocker = getUnitAtTile(row, col);
@@ -137,8 +131,6 @@ public class GameManager {
 
 	/**
 	 * Returns the ID of the player whose turn it currently is.
-	 *
-	 * @return The active player ID (0 or 1), or {@code -1} before the game starts.
 	 */
 	public static int getActivePlayerID() {
 		return activePlayerID;
@@ -147,7 +139,7 @@ public class GameManager {
 	/**
 	 * Initialises turn tracking and determines the first active player.
 	 *
-	 * <p>The turn count is set to {@code -players.length} so that each player
+	 * The turn count is set to {@code -players.length} so that each player
 	 * gets one setup turn (for unit placement) before the regular game begins.
 	 * Call this once after both players have been created.
 	 */
@@ -164,7 +156,7 @@ public class GameManager {
 	 * Ends the active player's turn, resets their units' movement, and advances to
 	 * the next player. Also clears any current unit selection.
 	 *
-	 * <p>Safe to call before the game has started — it checks bounds before
+	 * Safe to call before the game has started — it checks bounds before
 	 * touching the players array.
 	 */
 	public static void endTurn() {
@@ -182,8 +174,6 @@ public class GameManager {
 	/**
 	 * Returns the current turn count. Negative values indicate the setup phase;
 	 * zero and above indicate normal gameplay.
-	 *
-	 * @return The current turn count.
 	 */
 	public static int getTurnCount() {
 		return TURN_COUNT;
@@ -193,8 +183,6 @@ public class GameManager {
 	 * Returns {@code true} if the game is still in the setup phase, where players
 	 * are placing their initial units. The setup phase lasts while the turn count
 	 * is negative (one setup turn per player).
-	 *
-	 * @return {@code true} during the setup phase, {@code false} once gameplay begins.
 	 */
 	public static boolean isSetupTurn() {
 		return TURN_COUNT < 0;
@@ -214,8 +202,7 @@ public class GameManager {
 	/**
 	 * Returns the player ID for a given unit as an {@code int}.
 	 *
-	 * @param unit The unit to query.
-	 * @return The player ID that owns the unit (0 or 1).
+	 * unit = The unit to query.
 	 */
 	public static int getPlayerOfUnit(Unit unit) {
 		return unit.getPlayerID();
@@ -223,8 +210,6 @@ public class GameManager {
 
 	/**
 	 * Returns the {@link Player} object for the player whose turn it currently is.
-	 *
-	 * @return The active player.
 	 */
 	public static Player getActivePlayer() {
 		return players[activePlayerID];
@@ -233,9 +218,7 @@ public class GameManager {
 	/**
 	 * Searches every tile on the board to find where the given unit is located.
 	 *
-	 * @param unit The unit to locate.
-	 * @return An {@code int[]} of {@code {row, col}}, or {@code {-1, -1}} if the
-	 *		 unit is not found on the board.
+	 * unit = The unit to locate.
 	 */
 	public static int[] getPositionOfUnit(Unit unit) {
 		if (unit != null && unit.getX() >= 0 && unit.getY() >= 0) {
@@ -273,7 +256,6 @@ public class GameManager {
 	
 	/**
 	 * Removes a unit from the board and checks if the player has lost all of their units.
-	 * @param unit
 	 */
 	public static void removeUnit(Unit unit) {
 		// 1. Instantly remove the unit using its known coordinates
